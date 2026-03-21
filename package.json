@@ -4,6 +4,9 @@
   "version": "0.2.0",
   "description": "Interactive timeline spotlighting overlooked voices and movements from 1700-2026",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
