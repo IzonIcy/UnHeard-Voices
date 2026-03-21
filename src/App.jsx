@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import events from './data/events.json'
 import HistographyVisualization from './components/HistographyVisualization'
 import './styles/timeline.css'
@@ -68,8 +68,21 @@ function App() {
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [storyStep, setStoryStep] = useState(null)
   const [showMethodology, setShowMethodology] = useState(false)
+  const [dyslexiaMode, setDyslexiaMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('dyslexiaMode')
+      return saved === 'true'
+    }
+    return false
+  })
+  const [showSettings, setShowSettings] = useState(false)
   const surpriseClickCountRef = useRef(0)
   const lastSurpriseClickAtRef = useRef(0)
+
+  // Save dyslexia mode preference to localStorage
+  useEffect(() => {
+    localStorage.setItem('dyslexiaMode', dyslexiaMode)
+  }, [dyslexiaMode])
 
   const eventsById = useMemo(() => {
     const lookup = new Map()
@@ -142,9 +155,32 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div className={`app ${dyslexiaMode ? 'dyslexia-mode' : ''}`}>
       {viewMode === 'home' ? (
         <div id="home" className="screen" onClick={handleBackgroundSurpriseClick}>
+          <button
+            type="button"
+            className="settings-button"
+            onClick={(e) => {
+              e.stopPropagation()
+              setShowSettings(!showSettings)
+            }}
+            title="Settings"
+          >
+            ⚙️
+          </button>
+          {showSettings && (
+            <div className="settings-panel">
+              <label className="setting-item">
+                <input
+                  type="checkbox"
+                  checked={dyslexiaMode}
+                  onChange={() => setDyslexiaMode(!dyslexiaMode)}
+                />
+                <span>Dyslexia-Friendly Font</span>
+              </label>
+            </div>
+          )}
           <div className="home-layout">
             <div className="logo-container">
               <p className="eyebrow">Counter-Archive</p>
@@ -191,6 +227,26 @@ function App() {
         </div>
       ) : (
         <div className="visualization-container" onClick={handleBackgroundSurpriseClick}>
+          <button
+            type="button"
+            className="settings-button settings-button-viz"
+            onClick={() => setShowSettings(!showSettings)}
+            title="Settings"
+          >
+            ⚙️
+          </button>
+          {showSettings && (
+            <div className="settings-panel settings-panel-viz">
+              <label className="setting-item">
+                <input
+                  type="checkbox"
+                  checked={dyslexiaMode}
+                  onChange={() => setDyslexiaMode(!dyslexiaMode)}
+                />
+                <span>Dyslexia-Friendly Font</span>
+              </label>
+            </div>
+          )}
           <div className="topbar">
             <button type="button" className="home-link" onClick={() => openView('home')}>
               Home
@@ -208,6 +264,7 @@ function App() {
               ))}
             </div>
             <div className="topbar-actions">
+
               <button type="button" className="view-pill" onClick={() => setShowMethodology(true)}>
                 Curation Method
               </button>
