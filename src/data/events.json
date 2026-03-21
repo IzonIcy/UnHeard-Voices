@@ -1,0 +1,200 @@
+[
+  {
+    "id": 1,
+    "title": "Nanny of the Maroons Leads Resistance",
+    "date": 1730,
+    "year": "c. 1730",
+    "category": "resistance",
+    "description": "Nanny, a Jamaican Maroon leader, helps coordinate resistance to British colonial forces and protects autonomous communities.",
+    "wikiLink": "Nanny of the Maroons"
+  },
+  {
+    "id": 2,
+    "title": "Phillis Wheatley Publishes Poetry",
+    "date": 1773,
+    "year": "1773",
+    "category": "arts",
+    "description": "Phillis Wheatley becomes one of the first published African American poets, challenging ideas about race, intellect, and authorship.",
+    "wikiLink": "Phillis Wheatley"
+  },
+  {
+    "id": 3,
+    "title": "Mary Prince Testifies About Slavery",
+    "date": 1831,
+    "year": "1831",
+    "category": "resistance",
+    "description": "The History of Mary Prince becomes a major first-person account of slavery by a Black woman in the British Caribbean.",
+    "wikiLink": "Mary Prince"
+  },
+  {
+    "id": 4,
+    "title": "Frederick Douglass Launches The North Star",
+    "date": 1847,
+    "year": "1847",
+    "category": "civil_rights",
+    "description": "Douglass creates an abolitionist newspaper amplifying anti-slavery writing and Black political thought.",
+    "wikiLink": "The North Star (anti-slavery newspaper)"
+  },
+  {
+    "id": 5,
+    "title": "Sojourner Truth Delivers Ain't I a Woman?",
+    "date": 1851,
+    "year": "1851",
+    "category": "civil_rights",
+    "description": "Sojourner Truth links abolition and women's rights, exposing how race and gender oppression intersect.",
+    "wikiLink": "Ain't I a Woman?"
+  },
+  {
+    "id": 6,
+    "title": "Harriet Tubman Leads Rescue Missions",
+    "date": 1863,
+    "year": "1863",
+    "category": "resistance",
+    "description": "Tubman leads intelligence and liberation missions during the US Civil War, including the Combahee Ferry Raid.",
+    "wikiLink": "Harriet Tubman"
+  },
+  {
+    "id": 7,
+    "title": "First Native American Woman Doctor Licensed in US",
+    "date": 1889,
+    "year": "1889",
+    "category": "science",
+    "description": "Susan La Flesche Picotte earns her medical degree and serves Native communities with a focus on public health.",
+    "wikiLink": "Susan La Flesche Picotte"
+  },
+  {
+    "id": 8,
+    "title": "Ida B. Wells Publishes Anti-Lynching Investigations",
+    "date": 1892,
+    "year": "1892",
+    "category": "civil_rights",
+    "description": "Wells documents racial terror in investigative journalism, shaping global anti-lynching activism.",
+    "wikiLink": "Ida B. Wells"
+  },
+  {
+    "id": 9,
+    "title": "Yuri Kochiyama Born; Future Cross-Movement Organizer",
+    "date": 1921,
+    "year": "1921",
+    "category": "civil_rights",
+    "description": "Kochiyama later becomes a key organizer connecting Japanese American redress, Black liberation, and anti-imperialist struggles.",
+    "wikiLink": "Yuri Kochiyama"
+  },
+  {
+    "id": 10,
+    "title": "Zora Neale Hurston's Anthropological Work Gains Reach",
+    "date": 1935,
+    "year": "1935",
+    "category": "arts",
+    "description": "Hurston's fieldwork and writing preserve Black folklore traditions often dismissed by mainstream scholarship.",
+    "wikiLink": "Zora Neale Hurston"
+  },
+  {
+    "id": 11,
+    "title": "Mendez v. Westminster Challenges School Segregation",
+    "date": 1947,
+    "year": "1947",
+    "category": "civil_rights",
+    "description": "Mexican American families in California win a key desegregation case that influences later civil rights litigation.",
+    "wikiLink": "Mendez v. Westminster"
+  },
+  {
+    "id": 12,
+    "title": "Claudette Colvin Refuses to Give Up Her Seat",
+    "date": 1955,
+    "year": "1955",
+    "category": "civil_rights",
+    "description": "Months before the more widely known boycott moment, Claudette Colvin's resistance becomes part of legal strategy against bus segregation.",
+    "wikiLink": "Claudette Colvin"
+  },
+  {
+    "id": 13,
+    "title": "Dolores Huerta Co-Founds United Farm Workers",
+    "date": 1962,
+    "year": "1962",
+    "category": "labor",
+    "description": "Huerta helps organize farmworkers for labor rights, better pay, and safer working conditions.",
+    "wikiLink": "Dolores Huerta"
+  },
+  {
+    "id": 14,
+    "title": "Nina Simone Releases Mississippi Goddam",
+    "date": 1964,
+    "year": "1964",
+    "category": "arts",
+    "description": "Nina Simone turns performance into protest, using music to confront racist violence in the US.",
+    "wikiLink": "Mississippi Goddam"
+  },
+  {
+    "id": 15,
+    "title": "American Indian Movement Founded",
+    "date": 1968,
+    "year": "1968",
+    "category": "indigenous",
+    "description": "AIM is founded to address police brutality, treaty rights, sovereignty, and conditions in Native communities.",
+    "wikiLink": "American Indian Movement"
+  },
+  {
+    "id": 16,
+    "title": "The Combahee River Collective Statement",
+    "date": 1977,
+    "year": "1977",
+    "category": "civil_rights",
+    "description": "Black feminist organizers articulate an intersectional political framework centered on those most marginalized.",
+    "wikiLink": "Combahee River Collective"
+  },
+  {
+    "id": 17,
+    "title": "Rigoberta Menchu's Testimonio Goes Global",
+    "date": 1983,
+    "year": "1983",
+    "category": "indigenous",
+    "description": "The life narrative of Rigoberta Menchu highlights Indigenous rights struggles in Guatemala for international audiences.",
+    "wikiLink": "Rigoberta Menchu"
+  },
+  {
+    "id": 18,
+    "title": "Dr. Flossie Wong-Staal Helps Map HIV",
+    "date": 1985,
+    "year": "1985",
+    "category": "science",
+    "description": "Virologist Flossie Wong-Staal's work on HIV genetics advances understanding and testing in the AIDS crisis.",
+    "wikiLink": "Flossie Wong-Staal"
+  },
+  {
+    "id": 19,
+    "title": "Disability Rights Movement Wins ADA",
+    "date": 1990,
+    "year": "1990",
+    "category": "civil_rights",
+    "description": "Activists secure the Americans with Disabilities Act, reshaping access and anti-discrimination law.",
+    "wikiLink": "Americans with Disabilities Act of 1990"
+  },
+  {
+    "id": 20,
+    "title": "Wangari Maathai Wins Nobel Peace Prize",
+    "date": 2004,
+    "year": "2004",
+    "category": "resistance",
+    "description": "Maathai is recognized for linking environmental restoration, women's leadership, and democratic rights in Kenya.",
+    "wikiLink": "Wangari Maathai"
+  },
+  {
+    "id": 21,
+    "title": "Tarana Burke's Me Too Movement Expands",
+    "date": 2017,
+    "year": "2017",
+    "category": "civil_rights",
+    "description": "Tarana Burke's long-running survivor-centered framework reaches global scale and reshapes discussions of accountability.",
+    "wikiLink": "Me Too movement"
+  },
+  {
+    "id": 22,
+    "title": "Land Back and Language Revitalization Campaigns Grow",
+    "date": 2022,
+    "year": "2022",
+    "category": "indigenous",
+    "description": "Indigenous-led movements around land stewardship and language renewal gain broader institutional support.",
+    "wikiLink": "Land Back"
+  }
+]
