@@ -21,7 +21,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--ink-900);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 100vh;
   background:
     radial-gradient(circle at 16% 18%, rgba(54, 137, 255, 0.2), transparent 48%),
     radial-gradient(circle at 86% 6%, rgba(0, 214, 164, 0.16), transparent 43%),
@@ -30,20 +32,20 @@ body {
 
 #root {
   width: 100%;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 .app {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 .screen {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -246,7 +248,8 @@ body {
 
 .visualization-container {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -326,12 +329,13 @@ body {
   justify-content: center;
   position: relative;
   padding: 56px 38px 34px;
-  overflow: hidden;
+  overflow: visible;
+  touch-action: pan-y;
 }
 
 .timeline-shell {
   width: min(1280px, 100%);
-  height: min(680px, 100%);
+  min-height: min(680px, 100%);
   display: grid;
   grid-template-columns: 214px 1fr;
   border: 1px solid rgba(56, 38, 45, 0.45);
@@ -474,6 +478,7 @@ body {
   border-radius: 0;
   box-shadow: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  touch-action: pan-y;
 }
 
 .event-canvas:hover {
