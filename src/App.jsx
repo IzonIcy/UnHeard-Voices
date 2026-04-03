@@ -15,7 +15,7 @@ function App() {
     <div className="app">
       <header className="app-header">
         <h1>Unheard Voices</h1>
-        <p>Exploring underrepresented histories from 1700-2026</p>
+        <p>Exploring unrepresented histories from 1700-2026</p>
         <div className="view-mode-toggle">
           <button 
             className={viewMode === 'timeline' ? 'active' : ''}
