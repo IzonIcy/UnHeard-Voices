@@ -396,6 +396,25 @@ function HistographyVisualization({ events, viewMode, yearRange, onYearChange, o
               )
             })}
           </div>
+
+          <div className="time-slider-container">
+            <div className="slider-years">
+              <div>{Math.floor(yearRange[0])}</div>
+              <div>{Math.floor(yearRange[1])}</div>
+            </div>
+            <input
+              type="range"
+              min={minYear}
+              max={maxYear}
+              value={yearRange[1]}
+              onChange={handleSliderChange}
+              className="time-slider"
+            />
+          </div>
+
+          <div className="events-count">
+            {visibleEvents.length} events in view
+          </div>
         </aside>
 
         <div className="timeline-stage">
@@ -470,25 +489,6 @@ function HistographyVisualization({ events, viewMode, yearRange, onYearChange, o
           )}
         </div>
       )}
-
-      <div className="time-slider-container">
-        <div className="slider-years">
-          <div>{Math.floor(yearRange[0])}</div>
-          <div>{Math.floor(yearRange[1])}</div>
-        </div>
-        <input
-          type="range"
-          min={minYear}
-          max={maxYear}
-          value={yearRange[1]}
-          onChange={handleSliderChange}
-          className="time-slider"
-        />
-      </div>
-
-      <div className="events-count">
-        {visibleEvents.length} events in view
-      </div>
     </div>
   )
 }
