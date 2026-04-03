@@ -64,3 +64,4 @@ rm -rf node_modules package-lock.json
 npm install
 npm run dev
 ```
+This Ai (Copilot) was used to find and debug bugs in the code and to make shure everything was up to date and it was also used to make the README.md!
