@@ -19,6 +19,7 @@ https://un-heard-voices-8xof.vercel.app/
 	npm install
 2. Start dev server:
 	npm run dev
+	(after this step is not needed if you want to host it!)
 3. Build for production:
 	npm run build
 4. Preview production build locally:
