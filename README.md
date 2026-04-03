@@ -11,7 +11,7 @@ https://un-heard-voices-8xof.vercel.app/
 - Lets users explore history in two modes: Timeline and Constellation
 - Supports category filtering, year range exploration, and event detail views
 - Links each event to a public reference for deeper reading
-- Has a settings for people who have dyslexia
+- Has a settings for people who have dyslexia(Coming Soon!)
 
 ## Run Locally
 
