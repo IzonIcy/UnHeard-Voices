@@ -164,7 +164,7 @@ function HistographyVisualization({ events, viewMode, yearRange, onYearChange, o
     ctx.clearRect(0, 0, width, height)
     drawBackdrop(ctx, width, height)
 
-    if (viewMode === 'graph') {
+    if (viewMode === 'timeline') {
       drawGraphView(ctx, width, height, points)
     } else {
       drawConstellationView(ctx, width, height, points)
