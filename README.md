@@ -9,7 +9,11 @@ https://un-heard-voices-8xof.vercel.app/
 
 - Shows curated events from 1700 to 2026
 - Lets users explore history in two modes: Timeline and Constellation
-- Supports category filtering, year range exploration, and event detail views
+- Supports text search with quick scopes (title, person, movement, place)
+- Supports category filtering and a true start/end year range
+- Includes connected event relationships (influenced by, same movement, same region)
+- Includes keyboard-friendly and touch-friendly event exploration
+- Deep-links UI state in the URL for easy sharing
 - Links each event to a public reference for deeper reading
 
 
