@@ -1,71 +1,38 @@
 # Unheard Voices
 
-Unheard Voices is an interactive timeline and constellation-style visualization that highlights important people and movements that are often underrepresented in mainstream history summaries.
+Interactive timeline + constellation visualization of historical figures and movements that mainstream history usually skips over.
 
-Live URL:
-https://un-heard-voices-8xof.vercel.app/
+**Live:** [https://un-heard-voices-8xof.vercel.app/](https://un-heard-voices-8xof.vercel.app/)
 
-## What This Project Does
+## What this is
 
-- Shows curated events from 1700 to 2026
-- Lets users explore history in two modes: Timeline and Constellation
-- Supports text search with quick scopes (title, person, movement, place)
-- Supports category filtering and a true start/end year range
-- Includes connected event relationships (influenced by, same movement, same region)
-- Includes keyboard-friendly and touch-friendly event exploration
-- Deep-links UI state in the URL for easy sharing
-- Links each event to a public reference for deeper reading
+I noticed that most "history timeline" projects cover the same canon — a handful of Western figures and events. So I started curating a dataset of underrepresented historical moments: indigenous resistance, queer pioneers, anti-colonial movements, forgotten inventors. It covers 1700 to 2026.
 
+You can explore it in two views:
+- **Timeline** — chronological, good for seeing what happened when
+- **Constellation** — graph view showing how events connect (influences, shared movements, regions)
 
-## Run Locally
+Both views filter by category, person, movement, or place. The UI state lives in the URL so you can share what you're looking at.
 
-1. Install dependencies:
-	npm install
-2. Start dev server:
-	npm run dev
-	(after this step is not needed if you want to host it!)
-3. Build for production:
-	npm run build
-4. Preview production build locally:
-	npm run preview
-
-This project is configured for Node.js 20.x.
-
-## Host It Yourself
-
-### Option 1: Vercel (Recommended)
-
-1. Push this project to a GitHub repository.
-2. Sign in to Vercel and click Add New Project.
-3. Import your repository.
-4. Keep the detected settings:
-	- Framework: Vite
-	- Build command: npm run build
-	- Output directory: dist
-5. Click Deploy.
-
-Vercel will auto-deploy new updates when you push to your main branch.
-
-### Option 2: Any Static Host
-
-1. Build the app:
+## Run it
 
 ```bash
 npm install
-npm run build
+npm run dev       # localhost:5173
+npm run build     # dist/
 ```
 
-2. Upload the generated dist folder to any static host (Netlify, GitHub Pages, Cloudflare Pages, etc.).
+## Stack
 
-## If "nothing works"
+Vite + TypeScript. Custom Canvas renderer — I initially tried D3 but hit performance issues with 300+ interactive nodes, so I built something more targeted. The dataset is a static JSON file which keeps deployment trivial (no backend needed).
 
-If you see vite not found or exit code 127, dependencies were likely not installed correctly.
+## Deploy
 
-Run:
+Vercel auto-detects Vite settings. Or just `npm run build` and upload `dist/` anywhere.
+
+## If it doesn't work
 
 ```bash
 rm -rf node_modules package-lock.json
 npm install
-npm run dev
 ```
-This Ai (Copilot) was used to find and debug bugs in the code and to make sure everything was up to date and it was also used to make the README.md!
