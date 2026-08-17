@@ -1,6 +1,15 @@
 [
   {
     "id": 1,
+    "title": "New York Slave Revolt of 1712",
+    "date": 1712,
+    "year": "1712",
+    "category": "resistance",
+    "description": "Enslaved Africans and Indigenous people in New York City stage an armed revolt against colonial rule, met with brutal reprisals and harsher slave codes.",
+    "wikiLink": "New York Slave Revolt of 1712"
+  },
+  {
+    "id": 2,
     "title": "Nanny of the Maroons Leads Resistance",
     "date": 1730,
     "year": "c. 1730",
@@ -9,7 +18,25 @@
     "wikiLink": "Nanny of the Maroons"
   },
   {
-    "id": 2,
+    "id": 3,
+    "title": "Stono Rebellion",
+    "date": 1739,
+    "year": "1739",
+    "category": "resistance",
+    "description": "The largest slave uprising in the British mainland colonies erupts in South Carolina, prompting the strictest slave codes yet enacted.",
+    "wikiLink": "Stono Rebellion"
+  },
+  {
+    "id": 4,
+    "title": "Tacky's War",
+    "date": 1763,
+    "year": "1763",
+    "category": "resistance",
+    "description": "Enslaved Akan people in Jamaica rise up under Tacky, the largest revolt in the British Caribbean before the Haitian Revolution.",
+    "wikiLink": "Tacky's War"
+  },
+  {
+    "id": 5,
     "title": "Phillis Wheatley Publishes Poetry",
     "date": 1773,
     "year": "1773",
@@ -18,7 +45,34 @@
     "wikiLink": "Phillis Wheatley"
   },
   {
-    "id": 3,
+    "id": 6,
+    "title": "Haitian Revolution Begins",
+    "date": 1791,
+    "year": "1791",
+    "category": "resistance",
+    "description": "Enslaved people in Saint-Domingue rise up and begin the only successful slave revolution in history, leading to Haiti's independence.",
+    "wikiLink": "Haitian Revolution"
+  },
+  {
+    "id": 7,
+    "title": "A Vindication of the Rights of Woman",
+    "date": 1792,
+    "year": "1792",
+    "category": "women",
+    "description": "Mary Wollstonecraft publishes one of the first works of feminist philosophy, arguing women are rational beings deserving education and equality.",
+    "wikiLink": "A Vindication of the Rights of Woman"
+  },
+  {
+    "id": 8,
+    "title": "American School for the Deaf Opens",
+    "date": 1817,
+    "year": "1817",
+    "category": "disability",
+    "description": "The first permanent school for deaf students in the U.S. opens in Hartford, founding American Sign Language in the process.",
+    "wikiLink": "American School for the Deaf"
+  },
+  {
+    "id": 9,
     "title": "Mary Prince Testifies About Slavery",
     "date": 1831,
     "year": "1831",
@@ -27,7 +81,16 @@
     "wikiLink": "Mary Prince"
   },
   {
-    "id": 4,
+    "id": 10,
+    "title": "Amistad Rebellion",
+    "date": 1839,
+    "year": "1839",
+    "category": "resistance",
+    "description": "Captive Mende people seize the schooner La Amistad off Cuba, and their fight for freedom reaches the U.S. Supreme Court.",
+    "wikiLink": "La Amistad"
+  },
+  {
+    "id": 11,
     "title": "Frederick Douglass Launches The North Star",
     "date": 1847,
     "year": "1847",
@@ -36,7 +99,16 @@
     "wikiLink": "The North Star (anti-slavery newspaper)"
   },
   {
-    "id": 5,
+    "id": 12,
+    "title": "Seneca Falls Convention",
+    "date": 1848,
+    "year": "1848",
+    "category": "women",
+    "description": "The first women's rights convention drafts a Declaration of Sentiments demanding equal rights, including the vote.",
+    "wikiLink": "Seneca Falls Convention"
+  },
+  {
+    "id": 13,
     "title": "Sojourner Truth Delivers Ain't I a Woman?",
     "date": 1851,
     "year": "1851",
@@ -45,7 +117,7 @@
     "wikiLink": "Ain't I a Woman?"
   },
   {
-    "id": 6,
+    "id": 14,
     "title": "Harriet Tubman Leads Rescue Missions",
     "date": 1863,
     "year": "1863",
@@ -54,7 +126,7 @@
     "wikiLink": "Harriet Tubman"
   },
   {
-    "id": 7,
+    "id": 15,
     "title": "First Native American Woman Doctor Licensed in US",
     "date": 1889,
     "year": "1889",
@@ -63,7 +135,7 @@
     "wikiLink": "Susan La Flesche Picotte"
   },
   {
-    "id": 8,
+    "id": 16,
     "title": "Ida B. Wells Publishes Anti-Lynching Investigations",
     "date": 1892,
     "year": "1892",
@@ -72,7 +144,43 @@
     "wikiLink": "Ida B. Wells"
   },
   {
-    "id": 9,
+    "id": 17,
+    "title": "New Zealand Grants Women the Vote",
+    "date": 1893,
+    "year": "1893",
+    "category": "women",
+    "description": "New Zealand becomes the first self-governing country to let women vote, following a decades-long suffrage campaign.",
+    "wikiLink": "Women's suffrage in New Zealand"
+  },
+  {
+    "id": 18,
+    "title": "Uprising of the 20,000",
+    "date": 1909,
+    "year": "1909",
+    "category": "labor",
+    "description": "Mostly young immigrant women garment workers strike against sweatshop conditions in New York, winning the largest women's strike to date.",
+    "wikiLink": "Uprising of the 20,000"
+  },
+  {
+    "id": 19,
+    "title": "Triangle Shirtwaist Factory Fire",
+    "date": 1911,
+    "year": "1911",
+    "category": "labor",
+    "description": "146 workers, mostly immigrant women, die in a locked-door factory fire, galvanizing the movement for workplace safety laws.",
+    "wikiLink": "Triangle Shirtwaist Factory fire"
+  },
+  {
+    "id": 20,
+    "title": "19th Amendment Ratified",
+    "date": 1920,
+    "year": "1920",
+    "category": "women",
+    "description": "The U.S. Constitution finally prohibits denying the vote on the basis of sex, though many women of color remain excluded for decades.",
+    "wikiLink": "Nineteenth Amendment to the United States Constitution"
+  },
+  {
+    "id": 21,
     "title": "Yuri Kochiyama Born; Future Cross-Movement Organizer",
     "date": 1921,
     "year": "1921",
@@ -81,7 +189,16 @@
     "wikiLink": "Yuri Kochiyama"
   },
   {
-    "id": 10,
+    "id": 22,
+    "title": "Society for Human Rights Founded",
+    "date": 1924,
+    "year": "1924",
+    "category": "lgbtq",
+    "description": "Henry Gerber founds the first gay rights organization in the United States in Chicago, publishing the country's first gay-interest newsletter.",
+    "wikiLink": "Society for Human Rights"
+  },
+  {
+    "id": 23,
     "title": "Zora Neale Hurston's Anthropological Work Gains Reach",
     "date": 1935,
     "year": "1935",
@@ -90,7 +207,7 @@
     "wikiLink": "Zora Neale Hurston"
   },
   {
-    "id": 11,
+    "id": 24,
     "title": "Mendez v. Westminster Challenges School Segregation",
     "date": 1947,
     "year": "1947",
@@ -99,7 +216,25 @@
     "wikiLink": "Mendez v. Westminster"
   },
   {
-    "id": 12,
+    "id": 25,
+    "title": "Mattachine Society Founded",
+    "date": 1951,
+    "year": "1951",
+    "category": "lgbtq",
+    "description": "Harry Hay and others found the Mattachine Society, an early U.S. homophile organization that challenged police harassment and invisibility.",
+    "wikiLink": "Mattachine Society"
+  },
+  {
+    "id": 26,
+    "title": "Henrietta Lacks' Cells Become HeLa",
+    "date": 1951,
+    "year": "1951",
+    "category": "science",
+    "description": "Cells taken from Henrietta Lacks without her knowledge become the first immortal human cell line, powering decades of medicine while her family went uncompensated.",
+    "wikiLink": "Henrietta Lacks"
+  },
+  {
+    "id": 27,
     "title": "Claudette Colvin Refuses to Give Up Her Seat",
     "date": 1955,
     "year": "1955",
@@ -108,7 +243,25 @@
     "wikiLink": "Claudette Colvin"
   },
   {
-    "id": 13,
+    "id": 28,
+    "title": "Montgomery Bus Boycott",
+    "date": 1955,
+    "year": "1955",
+    "category": "civil_rights",
+    "description": "After Rosa Parks is arrested, Black residents of Montgomery sustain a year-long bus boycott that ends segregated seating.",
+    "wikiLink": "Montgomery bus boycott"
+  },
+  {
+    "id": 29,
+    "title": "Greensboro Sit-Ins",
+    "date": 1960,
+    "year": "1960",
+    "category": "civil_rights",
+    "description": "Four Black college students refuse to leave a Woolworth lunch counter, igniting sit-ins that spread across the segregated South.",
+    "wikiLink": "Greensboro sit-ins"
+  },
+  {
+    "id": 30,
     "title": "Dolores Huerta Co-Founds United Farm Workers",
     "date": 1962,
     "year": "1962",
@@ -117,7 +270,25 @@
     "wikiLink": "Dolores Huerta"
   },
   {
-    "id": 14,
+    "id": 31,
+    "title": "Ed Roberts Enters UC Berkeley",
+    "date": 1962,
+    "year": "1962",
+    "category": "disability",
+    "description": "Ed Roberts becomes the first student with severe disabilities admitted to UC Berkeley, launching the independent living movement.",
+    "wikiLink": "Ed Roberts (activist)"
+  },
+  {
+    "id": 32,
+    "title": "Equal Pay Act Signed",
+    "date": 1963,
+    "year": "1963",
+    "category": "women",
+    "description": "The U.S. bans wage discrimination on the basis of sex, a landmark step in the fight for pay equity.",
+    "wikiLink": "Equal Pay Act of 1963"
+  },
+  {
+    "id": 33,
     "title": "Nina Simone Releases Mississippi Goddam",
     "date": 1964,
     "year": "1964",
@@ -126,7 +297,34 @@
     "wikiLink": "Mississippi Goddam"
   },
   {
-    "id": 15,
+    "id": 34,
+    "title": "Voting Rights Act Signed",
+    "date": 1965,
+    "year": "1965",
+    "category": "civil_rights",
+    "description": "Federal law finally outlaws literacy tests and other barriers that had kept Black Americans from the ballot for a century.",
+    "wikiLink": "Voting Rights Act of 1965"
+  },
+  {
+    "id": 35,
+    "title": "Delano Grape Strike Begins",
+    "date": 1965,
+    "year": "1965",
+    "category": "labor",
+    "description": "Filipino and Mexican farmworkers strike in Delano, California, building a national grape boycott and the United Farm Workers.",
+    "wikiLink": "Delano grape strike"
+  },
+  {
+    "id": 36,
+    "title": "Black Panther Party Founded",
+    "date": 1966,
+    "year": "1966",
+    "category": "resistance",
+    "description": "Huey Newton and Bobby Seale found the Black Panther Party in Oakland, pairing self-defense with free breakfast, health, and education programs.",
+    "wikiLink": "Black Panther Party"
+  },
+  {
+    "id": 37,
     "title": "American Indian Movement Founded",
     "date": 1968,
     "year": "1968",
@@ -135,7 +333,52 @@
     "wikiLink": "American Indian Movement"
   },
   {
-    "id": 16,
+    "id": 38,
+    "title": "Stonewall Uprising",
+    "date": 1969,
+    "year": "1969",
+    "category": "lgbtq",
+    "description": "Patrons of the Stonewall Inn resist a police raid in Greenwich Village, igniting the modern LGBTQ+ liberation movement.",
+    "wikiLink": "Stonewall riots"
+  },
+  {
+    "id": 39,
+    "title": "Title IX Signed",
+    "date": 1972,
+    "year": "1972",
+    "category": "women",
+    "description": "The U.S. outlaws sex discrimination in education, transforming access to sports, scholarships, and campuses for women.",
+    "wikiLink": "Title IX"
+  },
+  {
+    "id": 40,
+    "title": "Trail of Broken Treaties",
+    "date": 1972,
+    "year": "1972",
+    "category": "indigenous",
+    "description": "The American Indian Movement's cross-country caravan occupies the BIA headquarters in Washington to protest broken treaties.",
+    "wikiLink": "Trail of Broken Treaties"
+  },
+  {
+    "id": 41,
+    "title": "Homosexuality Removed from DSM",
+    "date": 1973,
+    "year": "1973",
+    "category": "lgbtq",
+    "description": "The American Psychiatric Association declassifies homosexuality as a mental illness after years of activism inside and outside the profession.",
+    "wikiLink": "Homosexuality and psychology"
+  },
+  {
+    "id": 42,
+    "title": "Wounded Knee Occupation",
+    "date": 1973,
+    "year": "1973",
+    "category": "indigenous",
+    "description": "Oglala Lakota and AIM activists occupy Wounded Knee for 71 days, forcing national attention on treaty rights.",
+    "wikiLink": "Wounded Knee Occupation"
+  },
+  {
+    "id": 43,
     "title": "The Combahee River Collective Statement",
     "date": 1977,
     "year": "1977",
@@ -144,7 +387,25 @@
     "wikiLink": "Combahee River Collective"
   },
   {
-    "id": 17,
+    "id": 44,
+    "title": "Section 504 Sit-Ins",
+    "date": 1977,
+    "year": "1977",
+    "category": "disability",
+    "description": "Disabled activists occupy federal buildings for weeks to force enforcement of disability rights law, the longest sit-in at a federal site.",
+    "wikiLink": "Section 504 of the Rehabilitation Act"
+  },
+  {
+    "id": 45,
+    "title": "Harvey Milk Elected in San Francisco",
+    "date": 1978,
+    "year": "1978",
+    "category": "lgbtq",
+    "description": "Harvey Milk becomes one of the first openly gay elected officials in the U.S., only to be assassinated months later.",
+    "wikiLink": "Harvey Milk"
+  },
+  {
+    "id": 46,
     "title": "Rigoberta Menchu's Testimonio Goes Global",
     "date": 1983,
     "year": "1983",
@@ -153,7 +414,7 @@
     "wikiLink": "Rigoberta Menchu"
   },
   {
-    "id": 18,
+    "id": 47,
     "title": "Dr. Flossie Wong-Staal Helps Map HIV",
     "date": 1985,
     "year": "1985",
@@ -162,7 +423,7 @@
     "wikiLink": "Flossie Wong-Staal"
   },
   {
-    "id": 19,
+    "id": 48,
     "title": "Disability Rights Movement Wins ADA",
     "date": 1990,
     "year": "1990",
@@ -171,7 +432,34 @@
     "wikiLink": "Americans with Disabilities Act of 1990"
   },
   {
-    "id": 20,
+    "id": 49,
+    "title": "Americans with Disabilities Act Signed",
+    "date": 1990,
+    "year": "1990",
+    "category": "disability",
+    "description": "The U.S. outlaws discrimination against disabled people in employment, public spaces, and services, a model adopted worldwide.",
+    "wikiLink": "Americans with Disabilities Act of 1990"
+  },
+  {
+    "id": 50,
+    "title": "NAGPRA Signed",
+    "date": 1990,
+    "year": "1990",
+    "category": "indigenous",
+    "description": "The U.S. requires museums to return Indigenous remains and sacred objects, beginning the repatriation of stolen heritage.",
+    "wikiLink": "Native American Graves Protection and Repatriation Act"
+  },
+  {
+    "id": 51,
+    "title": "Lawrence v. Texas",
+    "date": 2003,
+    "year": "2003",
+    "category": "lgbtq",
+    "description": "The U.S. Supreme Court strikes down sodomy laws, ruling that intimate same-sex conduct is protected by the Constitution.",
+    "wikiLink": "Lawrence v. Texas"
+  },
+  {
+    "id": 52,
     "title": "Wangari Maathai Wins Nobel Peace Prize",
     "date": 2004,
     "year": "2004",
@@ -180,7 +468,34 @@
     "wikiLink": "Wangari Maathai"
   },
   {
-    "id": 21,
+    "id": 53,
+    "title": "Black Lives Matter Founded",
+    "date": 2013,
+    "year": "2013",
+    "category": "civil_rights",
+    "description": "Three Black women found Black Lives Matter after the acquittal of Trayvon Martin's killer, growing into a global movement.",
+    "wikiLink": "Black Lives Matter"
+  },
+  {
+    "id": 54,
+    "title": "Obergefell v. Hodges",
+    "date": 2015,
+    "year": "2015",
+    "category": "lgbtq",
+    "description": "The U.S. Supreme Court legalizes same-sex marriage nationwide, capping a generation of advocacy.",
+    "wikiLink": "Obergefell v. Hodges"
+  },
+  {
+    "id": 55,
+    "title": "Standing Rock Water Protectors",
+    "date": 2016,
+    "year": "2016",
+    "category": "indigenous",
+    "description": "The Standing Rock Sioux and allies camp at the confluence of the Missouri and Cannonball rivers to stop the Dakota Access Pipeline.",
+    "wikiLink": "Dakota Access Pipeline protests"
+  },
+  {
+    "id": 56,
     "title": "Tarana Burke's Me Too Movement Expands",
     "date": 2017,
     "year": "2017",
@@ -189,12 +504,39 @@
     "wikiLink": "Me Too movement"
   },
   {
-    "id": 22,
+    "id": 57,
+    "title": "Global George Floyd Protests",
+    "date": 2020,
+    "year": "2020",
+    "category": "civil_rights",
+    "description": "The killing of George Floyd sparks the largest protest movement in U.S. history and a worldwide reckoning on policing and race.",
+    "wikiLink": "George Floyd protests"
+  },
+  {
+    "id": 58,
     "title": "Land Back and Language Revitalization Campaigns Grow",
     "date": 2022,
     "year": "2022",
     "category": "indigenous",
     "description": "Indigenous-led movements around land stewardship and language renewal gain broader institutional support.",
     "wikiLink": "Land Back"
+  },
+  {
+    "id": 59,
+    "title": "UAW Stand-Up Strike Wins Record Contracts",
+    "date": 2023,
+    "year": "2023",
+    "category": "labor",
+    "description": "The United Auto Workers' six-week stand-up strike against the Big Three automakers wins record wage and benefit gains.",
+    "wikiLink": "2023 United Auto Workers strike"
+  },
+  {
+    "id": 60,
+    "title": "European Accessibility Act Takes Effect",
+    "date": 2025,
+    "year": "2025",
+    "category": "disability",
+    "description": "EU-wide accessibility rules for everyday products and services become enforceable, extending rights beyond public buildings.",
+    "wikiLink": "European Accessibility Act"
   }
 ]
