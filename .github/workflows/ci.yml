@@ -25,10 +25,10 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npx eslint src/ || true
+        run: npx eslint src/
 
       - name: Test
-        run: npm test || true
+        run: npm test
 
       - name: Build
         run: npm run build
