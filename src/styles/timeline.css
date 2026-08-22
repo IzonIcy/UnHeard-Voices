@@ -624,6 +624,38 @@ body {
   padding: 4px 8px;
 }
 
+.export-png-button {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 20;
+  background: rgba(14, 19, 26, 0.92);
+  border: 1px solid rgba(193, 211, 234, 0.24);
+  border-radius: 2px;
+  color: #e6f1ff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.export-png-button:hover {
+  border-color: rgba(143, 231, 211, 0.7);
+  color: #b8ffe9;
+}
+
+.export-unavailable {
+  position: absolute;
+  top: 44px;
+  right: 14px;
+  z-index: 20;
+  margin: 0;
+  color: #ffb86b;
+  font-size: 0.72rem;
+}
+
 .event-canvas {
   border: 0;
   background: transparent;

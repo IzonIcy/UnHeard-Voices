@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { downloadCanvasAsPng, exportFileName } from '../lib/exportImage.js'
 import '../styles/timeline.css'
 
 const CATEGORY_COLORS = {
@@ -267,6 +268,7 @@ function HistographyVisualization({
   const [hoveredEventId, setHoveredEventId] = useState(null)
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
   const [showTooltip, setShowTooltip] = useState(false)
+  const [exportUnavailable, setExportUnavailable] = useState(false)
 
   const canvasRef = useRef(null)
   const pointMapRef = useRef({})
@@ -943,6 +945,24 @@ function HistographyVisualization({
           <div className="year-badge">
             {startYear} - {endYear}
           </div>
+
+          <button
+            type="button"
+            className="export-png-button"
+            onClick={() => {
+              const ok = downloadCanvasAsPng(canvasRef.current, exportFileName(selectedEvent?.id))
+              if (!ok) {
+                setExportUnavailable(true)
+              }
+            }}
+          >
+            Export PNG
+          </button>
+          {exportUnavailable && (
+            <p className="export-unavailable" role="status">
+              Image export isn&apos;t available in this browser.
+            </p>
+          )}
 
           <div className="insights-panel" role="region" aria-label="Live timeline insights">
             {insightCards.map((card) => (
