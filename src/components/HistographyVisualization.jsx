@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import '../styles/timeline.css'
 
 const CATEGORY_COLORS = {
@@ -370,7 +370,9 @@ function HistographyVisualization({
 
   const visibleCategories = useMemo(() => {
     const seen = new Set()
-    visibleEvents.forEach((event) => seen.add(event.category))
+    visibleEvents.forEach((event) => {
+      seen.add(event.category)
+    })
     return Array.from(seen)
   }, [visibleEvents])
 
@@ -498,30 +500,7 @@ function HistographyVisualization({
     })
   }
 
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    const width = canvas.width
-    const height = canvas.height
-    const points = {}
-
-    ctx.clearRect(0, 0, width, height)
-    drawBackdrop(ctx, width, height)
-
-    if (viewMode === 'timeline') {
-      drawTimelineView(ctx, width, height, points)
-    } else {
-      drawConstellationView(ctx, width, height, points)
-    }
-
-    pointMapRef.current = points
-  }, [endYear, hoveredEventId, selectedEvent, stableLayout, startYear, viewMode, visibleEvents])
-
-  const drawBackdrop = (ctx, width, height) => {
+  const drawBackdrop = useCallback((ctx, width, height) => {
     const bg = ctx.createLinearGradient(0, 0, width, height)
     bg.addColorStop(0, '#090a0d')
     bg.addColorStop(0.52, '#101317')
@@ -557,9 +536,9 @@ function HistographyVisualization({
       ctx.lineTo(x, height)
       ctx.stroke()
     }
-  }
+  }, [])
 
-  const drawTimelineView = (ctx, width, height, points) => {
+  const drawTimelineView = useCallback((ctx, width, height, points) => {
     const paddingX = 52
     const paddingY = 42
     const chartWidth = width - paddingX * 2
@@ -608,9 +587,9 @@ function HistographyVisualization({
         ctx.stroke()
       }
     })
-  }
+  }, [endYear, hoveredEventId, selectedEvent, stableLayout, startYear, visibleEvents])
 
-  const drawConstellationView = (ctx, width, height, points) => {
+  const drawConstellationView = useCallback((ctx, width, height, points) => {
     const centerX = width / 2
     const centerY = height / 2
     const maxRadius = Math.min(width, height) / 2 - 54
@@ -658,7 +637,32 @@ function HistographyVisualization({
         ctx.stroke()
       }
     })
-  }
+  }, [hoveredEventId, selectedEvent, stableLayout, visibleEvents])
+
+  // Redraw the canvas whenever the view inputs (or the memoized draw
+  // callbacks built from them) change.
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const width = canvas.width
+    const height = canvas.height
+    const points = {}
+
+    ctx.clearRect(0, 0, width, height)
+    drawBackdrop(ctx, width, height)
+
+    if (viewMode === 'timeline') {
+      drawTimelineView(ctx, width, height, points)
+    } else {
+      drawConstellationView(ctx, width, height, points)
+    }
+
+    pointMapRef.current = points
+  }, [drawConstellationView, drawTimelineView, drawBackdrop, viewMode])
 
   const findEventAtPoint = (x, y) => {
     let closest = null
@@ -940,7 +944,7 @@ function HistographyVisualization({
             {startYear} - {endYear}
           </div>
 
-          <div className="insights-panel" aria-label="Live timeline insights">
+          <div className="insights-panel" role="region" aria-label="Live timeline insights">
             {insightCards.map((card) => (
               <article key={card.label} className="insight-card">
                 <p className="insight-label">{card.label}</p>
@@ -1014,7 +1018,7 @@ function HistographyVisualization({
           <p className="description">{selectedEvent.description}</p>
 
           {(selectedEventMetadata.movements.length > 0 || selectedEventMetadata.regions.length > 0) && (
-            <div className="event-meta-pills" aria-label="Event tags">
+            <div className="event-meta-pills" role="group" aria-label="Event tags">
               {selectedEventMetadata.movements.map((movement) => (
                 <span key={movement} className="meta-pill">
                   {formatTagLabel(movement, MOVEMENT_LABELS)}
@@ -1028,7 +1032,7 @@ function HistographyVisualization({
             </div>
           )}
 
-          <div className="related-events" aria-label="Related events">
+          <div className="related-events" role="region" aria-label="Related events">
             {relationshipGroups.map((group) => (
               <section key={group.key} className="related-group">
                 <h3>{group.label}</h3>
