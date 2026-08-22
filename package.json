@@ -5,7 +5,7 @@
   "description": "Interactive timeline spotlighting overlooked voices and movements from 1700-2026",
   "type": "module",
   "engines": {
-    "node": ">=20.x"
+    "node": ">=22"
   },
   "scripts": {
     "dev": "vite",
