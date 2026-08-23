@@ -141,12 +141,14 @@ function App() {
         <p>Exploring unrepresented histories from 1700-2026</p>
         <div className="view-mode-toggle">
           <button 
+            type="button"
             className={viewMode === 'timeline' ? 'active' : ''}
             onClick={() => setViewMode('timeline')}
           >
             Timeline
           </button>
           <button 
+            type="button"
             className={viewMode === 'constellation' ? 'active' : ''}
             onClick={() => setViewMode('constellation')}
           >
