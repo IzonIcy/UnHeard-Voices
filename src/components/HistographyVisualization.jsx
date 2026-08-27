@@ -541,11 +541,14 @@ function HistographyVisualization({
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
   const [showTooltip, setShowTooltip] = useState(false)
   const [exportUnavailable, setExportUnavailable] = useState(false)
+  const [liveAnnouncement, setLiveAnnouncement] = useState('')
 
   const canvasRef = useRef(null)
   const pointMapRef = useRef({})
   const touchStartEventIdRef = useRef(null)
   const touchStartPosRef = useRef(null)
+  const viewportRef = useRef({ width: 1280, height: 720 })
+  const rafIdRef = useRef(null)
 
   const allCategories = useMemo(() => Array.from(new Set(events.map((event) => event.category))), [events])
   const eventsById = useMemo(() => new Map(events.map((event) => [event.id, event])), [events])
@@ -650,6 +653,17 @@ function HistographyVisualization({
     })
     return Array.from(seen)
   }, [visibleEvents])
+
+  // Announce changes to visible events for screen readers
+  useEffect(() => {
+    const count = visibleEvents.length
+    const searchActive = normalizedSearchQuery.length > 0
+    const categoryFiltered = activeCategories.length !== allCategories.length
+    let message = `${count} event${count === 1 ? '' : 's'} in view`
+    if (searchActive) message += `, filtered by search`
+    if (categoryFiltered) message += `, filtered by category`
+    setLiveAnnouncement(message)
+  }, [visibleEvents.length, normalizedSearchQuery, activeCategories.length, allCategories.length])
 
   const categoryStats = useMemo(() => {
     const totals = {}
@@ -985,8 +999,12 @@ function HistographyVisualization({
   }
 
   const handleCanvasMouseMove = (event) => {
-    setShowTooltip(true)
-    updateHoverFromPointer(event.clientX, event.clientY)
+    if (rafIdRef.current) return
+    rafIdRef.current = requestAnimationFrame(() => {
+      rafIdRef.current = null
+      setShowTooltip(true)
+      updateHoverFromPointer(event.clientX, event.clientY)
+    })
   }
 
   const handleCanvasClick = (event) => {
@@ -1012,8 +1030,9 @@ function HistographyVisualization({
 
     // A finger that travels is a scroll, not a tap: forget the touch target
     // so lifting the finger doesn't open an unrelated event panel.
+    // Threshold increased to 15px for better touch ergonomics.
     const start = touchStartPosRef.current
-    if (start && Math.hypot(touch.clientX - start.x, touch.clientY - start.y) > 10) {
+    if (start && Math.hypot(touch.clientX - start.x, touch.clientY - start.y) > 15) {
       touchStartEventIdRef.current = null
       return
     }
@@ -1100,10 +1119,15 @@ function HistographyVisualization({
     ? `https://en.wikipedia.org/wiki/${encodeURIComponent(selectedEvent.wikiLink.replaceAll(' ', '_'))}`
     : null
 
-  // Read live at render so a resized window can't leave the tooltip clamped
-  // against stale dimensions.
-  const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1280
-  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 720
+  // Update viewport ref on resize
+  useEffect(() => {
+    const updateViewport = () => {
+      viewportRef.current = { width: window.innerWidth, height: window.innerHeight }
+    }
+    updateViewport()
+    window.addEventListener('resize', updateViewport)
+    return () => window.removeEventListener('resize', updateViewport)
+  }, [])
 
   return (
     <div className="histography-container">
@@ -1248,6 +1272,15 @@ function HistographyVisualization({
             </p>
           )}
 
+          {/* Live region for screen reader announcements */}
+          <div
+            className="visually-hidden"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {liveAnnouncement}
+          </div>
+
           <div className="insights-panel" role="region" aria-label="Live timeline insights">
             {insightCards.map((card) => (
               <article key={card.label} className="insight-card">
@@ -1301,8 +1334,8 @@ function HistographyVisualization({
           className="hover-tooltip"
           style={{
             display: 'block',
-            left: `${Math.min(tooltipPos.x + 14, viewportWidth - 260)}px`,
-            top: `${Math.min(tooltipPos.y + 14, viewportHeight - 150)}px`
+            left: `${Math.min(tooltipPos.x + 14, viewportRef.current.width - 260)}px`,
+            top: `${Math.min(tooltipPos.y + 14, viewportRef.current.height - 150)}px`
           }}
         >
           <strong>{hoveredEvent.title}</strong>
@@ -1312,11 +1345,16 @@ function HistographyVisualization({
       )}
 
       {selectedEvent && (
-        <div className="event-detail-panel">
+        <div
+          className="event-detail-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="event-detail-title"
+        >
           <button className="close-btn" type="button" aria-label="Close event details" onClick={() => onEventSelect(null)}>
             ×
           </button>
-          <h2>{selectedEvent.title}</h2>
+          <h2 id="event-detail-title">{selectedEvent.title}</h2>
           <p className="year">{selectedEvent.year}</p>
           <p className="category">{formatCategoryLabel(selectedEvent.category)}</p>
           <p className="description">{selectedEvent.description}</p>
