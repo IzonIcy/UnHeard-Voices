@@ -2,22 +2,28 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { downloadCanvasAsPng, exportFileName } from '../lib/exportImage.js'
 import '../styles/timeline.css'
 
-const CATEGORY_COLORS = {
+export const CATEGORY_COLORS = {
   civil_rights: '#d94841',
   labor: '#de7c2b',
   indigenous: '#2f7d32',
   science: '#1565c0',
   arts: '#8e5ea2',
-  resistance: '#90a4ae'
+  resistance: '#90a4ae',
+  women: '#c2185b',
+  disability: '#00838f',
+  lgbtq: '#5d40b5'
 }
 
-const CATEGORY_GLOWS = {
+export const CATEGORY_GLOWS = {
   civil_rights: 'rgba(217, 72, 65, 0.2)',
   labor: 'rgba(222, 124, 43, 0.2)',
   indigenous: 'rgba(47, 125, 50, 0.2)',
   science: 'rgba(21, 101, 192, 0.2)',
   arts: 'rgba(142, 94, 162, 0.2)',
-  resistance: 'rgba(55, 71, 79, 0.2)'
+  resistance: 'rgba(55, 71, 79, 0.2)',
+  women: 'rgba(194, 24, 91, 0.2)',
+  disability: 'rgba(0, 131, 143, 0.2)',
+  lgbtq: 'rgba(93, 64, 181, 0.2)'
 }
 
 const FALLBACK_COLOR = '#0f766e'
@@ -63,7 +69,7 @@ const EMPTY_METADATA = {
   influencedBy: []
 }
 
-const EVENT_METADATA = {
+export const EVENT_METADATA = {
   1: {
     people: ['Nanny of the Maroons'],
     places: ['Jamaica'],
@@ -217,6 +223,272 @@ const EVENT_METADATA = {
     movements: ['language_revitalization', 'indigenous_sovereignty'],
     regions: ['north_america'],
     influencedBy: [15, 17]
+  },
+  23: {
+    people: ['Zora Neale Hurston'],
+    places: ['United States'],
+    movements: ['black_literature', 'civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [10]
+  },
+  24: {
+    people: ['Mendez family'],
+    places: ['California', 'United States'],
+    movements: ['school_desegregation', 'civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [11, 4]
+  },
+  25: {
+    people: ['Harry Hay', 'Mattachine Society'],
+    places: ['United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: []
+  },
+  26: {
+    people: ['Henrietta Lacks'],
+    places: ['United States'],
+    movements: ['public_health'],
+    regions: ['north_america'],
+    influencedBy: [7]
+  },
+  27: {
+    people: ['Claudette Colvin'],
+    places: ['Alabama', 'United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [12, 8]
+  },
+  28: {
+    people: ['Rosa Parks'],
+    places: ['Alabama', 'United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [27, 8]
+  },
+  29: {
+    people: ['Greensboro Four'],
+    places: ['North Carolina', 'United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [28]
+  },
+  30: {
+    people: ['Dolores Huerta'],
+    places: ['California', 'United States'],
+    movements: ['labor_rights', 'civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [13]
+  },
+  31: {
+    people: ['Ed Roberts'],
+    places: ['California', 'United States'],
+    movements: ['disability_rights'],
+    regions: ['north_america'],
+    influencedBy: []
+  },
+  32: {
+    people: [],
+    places: ['United States'],
+    movements: ['labor_rights'],
+    regions: ['north_america'],
+    influencedBy: [13]
+  },
+  33: {
+    people: ['Nina Simone'],
+    places: ['United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [14, 28]
+  },
+  34: {
+    people: [],
+    places: ['United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [12, 28, 29]
+  },
+  35: {
+    people: ['Larry Itliong', 'Dolores Huerta'],
+    places: ['California', 'United States'],
+    movements: ['labor_rights'],
+    regions: ['north_america'],
+    influencedBy: [30, 13]
+  },
+  36: {
+    people: ['Huey Newton', 'Bobby Seale'],
+    places: ['California', 'United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [29, 34]
+  },
+  37: {
+    people: ['American Indian Movement'],
+    places: ['United States'],
+    movements: ['indigenous_sovereignty', 'indigenous_rights'],
+    regions: ['north_america'],
+    influencedBy: [15, 7]
+  },
+  38: {
+    people: [],
+    places: ['New York', 'United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [25]
+  },
+  39: {
+    people: [],
+    places: ['United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [32]
+  },
+  40: {
+    people: ['American Indian Movement'],
+    places: ['Washington, D.C.', 'United States'],
+    movements: ['indigenous_sovereignty', 'treaty rights'],
+    regions: ['north_america'],
+    influencedBy: [37, 15]
+  },
+  41: {
+    people: [],
+    places: ['United States'],
+    movements: ['public_health'],
+    regions: ['north_america'],
+    influencedBy: [38, 25]
+  },
+  42: {
+    people: ['American Indian Movement', 'Oglala Lakota'],
+    places: ['South Dakota', 'United States'],
+    movements: ['indigenous_sovereignty'],
+    regions: ['north_america'],
+    influencedBy: [37, 40]
+  },
+  43: {
+    people: ['Combahee River Collective'],
+    places: ['United States'],
+    movements: ['black_feminism', 'civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [16, 5]
+  },
+  44: {
+    people: ['Disability Rights Movement'],
+    places: ['San Francisco', 'United States'],
+    movements: ['disability_rights', 'civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [31, 19]
+  },
+  45: {
+    people: ['Harvey Milk'],
+    places: ['San Francisco', 'United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [38, 41]
+  },
+  46: {
+    people: ['Rigoberta Menchu'],
+    places: ['Guatemala'],
+    movements: ['indigenous_rights'],
+    regions: ['latin_america'],
+    influencedBy: [17]
+  },
+  47: {
+    people: ['Flossie Wong-Staal'],
+    places: ['United States'],
+    movements: ['public_health'],
+    regions: ['north_america'],
+    influencedBy: [18]
+  },
+  48: {
+    people: ['Disability Rights Movement'],
+    places: ['United States'],
+    movements: ['disability_rights', 'civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [44, 31]
+  },
+  49: {
+    people: [],
+    places: ['United States'],
+    movements: ['disability_rights'],
+    regions: ['north_america'],
+    influencedBy: [48, 44]
+  },
+  50: {
+    people: [],
+    places: ['United States'],
+    movements: ['indigenous_sovereignty'],
+    regions: ['north_america'],
+    influencedBy: [37, 42]
+  },
+  51: {
+    people: [],
+    places: ['Texas', 'United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [38, 41]
+  },
+  52: {
+    people: ['Wangari Maathai'],
+    places: ['Kenya'],
+    movements: ['environmental_justice', 'civil_rights'],
+    regions: ['africa'],
+    influencedBy: [20]
+  },
+  53: {
+    people: ['Alicia Garza', 'Patrisse Cullors', 'Opal Tometi'],
+    places: ['United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [36, 57]
+  },
+  54: {
+    people: [],
+    places: ['United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [38, 51]
+  },
+  55: {
+    people: ['Standing Rock Sioux'],
+    places: ['North Dakota', 'United States'],
+    movements: ['indigenous_sovereignty', 'environmental_justice'],
+    regions: ['north_america'],
+    influencedBy: [42, 50]
+  },
+  56: {
+    people: ['Tarana Burke'],
+    places: ['United States'],
+    movements: ['survivor_justice'],
+    regions: ['north_america'],
+    influencedBy: [21]
+  },
+  57: {
+    people: ['George Floyd'],
+    places: ['Minneapolis', 'United States'],
+    movements: ['civil_rights'],
+    regions: ['north_america'],
+    influencedBy: [53]
+  },
+  58: {
+    people: [],
+    places: ['North America'],
+    movements: ['language_revitalization', 'indigenous_sovereignty'],
+    regions: ['north_america'],
+    influencedBy: [22, 55]
+  },
+  59: {
+    people: [],
+    places: ['United States'],
+    movements: ['labor_rights'],
+    regions: ['north_america'],
+    influencedBy: [30, 35]
+  },
+  60: {
+    people: [],
+    places: ['European Union'],
+    movements: ['disability_rights'],
+    regions: [],
+    influencedBy: [49, 48]
   }
 }
 
@@ -273,6 +545,7 @@ function HistographyVisualization({
   const canvasRef = useRef(null)
   const pointMapRef = useRef({})
   const touchStartEventIdRef = useRef(null)
+  const touchStartPosRef = useRef(null)
 
   const allCategories = useMemo(() => Array.from(new Set(events.map((event) => event.category))), [events])
   const eventsById = useMemo(() => new Map(events.map((event) => [event.id, event])), [events])
@@ -730,11 +1003,20 @@ function HistographyVisualization({
     setShowTooltip(false)
     const found = updateHoverFromPointer(touch.clientX, touch.clientY)
     touchStartEventIdRef.current = found?.id ?? null
+    touchStartPosRef.current = { x: touch.clientX, y: touch.clientY }
   }
 
   const handleCanvasTouchMove = (event) => {
     const touch = event.touches[0]
     if (!touch) return
+
+    // A finger that travels is a scroll, not a tap: forget the touch target
+    // so lifting the finger doesn't open an unrelated event panel.
+    const start = touchStartPosRef.current
+    if (start && Math.hypot(touch.clientX - start.x, touch.clientY - start.y) > 10) {
+      touchStartEventIdRef.current = null
+      return
+    }
     updateHoverFromPointer(touch.clientX, touch.clientY)
   }
 
@@ -799,6 +1081,8 @@ function HistographyVisualization({
       event.preventDefault()
       setHoveredEventId(null)
       setShowTooltip(false)
+      // Escape's real job is dismissing the detail overlay.
+      onEventSelect(null)
     }
   }
 
@@ -816,6 +1100,8 @@ function HistographyVisualization({
     ? `https://en.wikipedia.org/wiki/${encodeURIComponent(selectedEvent.wikiLink.replaceAll(' ', '_'))}`
     : null
 
+  // Read live at render so a resized window can't leave the tooltip clamped
+  // against stale dimensions.
   const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1280
   const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 720
 
@@ -951,9 +1237,7 @@ function HistographyVisualization({
             className="export-png-button"
             onClick={() => {
               const ok = downloadCanvasAsPng(canvasRef.current, exportFileName(selectedEvent?.id))
-              if (!ok) {
-                setExportUnavailable(true)
-              }
+              setExportUnavailable(!ok)
             }}
           >
             Export PNG

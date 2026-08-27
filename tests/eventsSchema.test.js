@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import events from '../src/data/events.json'
+import { CATEGORY_COLORS, CATEGORY_GLOWS, EVENT_METADATA } from '../src/components/HistographyVisualization.jsx'
 
 // Guards the dataset against malformed contributions. The visualization and
 // URL deep-linking both assume these invariants hold.
@@ -93,6 +94,25 @@ describe('events.json dataset', () => {
         event.wikiLink.startsWith('http'),
         `wikiLink should be a title, not a URL, on event ${event.id}: ${event.wikiLink}`
       ).toBe(false)
+    }
+  })
+
+  it('has EVENT_METADATA for every event id', () => {
+    // Search scopes, related-events, and tags silently return nothing when
+    // an id is missing from the map — this drift happened once already.
+    const missing = events
+      .map((event) => event.id)
+      .filter((id) => !(id in EVENT_METADATA))
+    expect(missing, `events missing metadata: ${missing.join(', ')}`).toEqual([])
+  })
+
+  it('has a color and glow for every category in the dataset', () => {
+    // New categories must land here AND in the UI maps together; the fallback
+    // teal makes several categories visually indistinguishable.
+    const categories = [...new Set(events.map((event) => event.category))]
+    for (const category of categories) {
+      expect(CATEGORY_COLORS[category], `no color for ${category}`).toBeTruthy()
+      expect(CATEGORY_GLOWS[category], `no glow for ${category}`).toBeTruthy()
     }
   })
 })

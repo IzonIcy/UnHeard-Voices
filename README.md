@@ -24,7 +24,7 @@ npm run build     # dist/
 
 ## Stack
 
-Vite + TypeScript. Custom Canvas renderer — I initially tried D3 but hit performance issues with 300+ interactive nodes, so I built something more targeted. The dataset is a static JSON file which keeps deployment trivial (no backend needed).
+Vite + React (JSX). Custom Canvas renderer — I initially tried D3 but hit performance issues with the interactive node count, so I built something more targeted. The dataset is a static JSON file which keeps deployment trivial (no backend needed).
 
 ## Deploy
 
@@ -33,6 +33,6 @@ Vercel auto-detects Vite settings. Or just `npm run build` and upload `dist/` an
 ## If it doesn't work
 
 ```bash
-rm -rf node_modules package-lock.json
+rm -rf node_modules
 npm install
 ```
