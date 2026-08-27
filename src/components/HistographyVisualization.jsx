@@ -541,13 +541,12 @@ function HistographyVisualization({
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
   const [showTooltip, setShowTooltip] = useState(false)
   const [exportUnavailable, setExportUnavailable] = useState(false)
-  const [liveAnnouncement, setLiveAnnouncement] = useState('')
+  const [viewport, setViewport] = useState({ width: 1280, height: 720 })
 
   const canvasRef = useRef(null)
   const pointMapRef = useRef({})
   const touchStartEventIdRef = useRef(null)
   const touchStartPosRef = useRef(null)
-  const viewportRef = useRef({ width: 1280, height: 720 })
   const rafIdRef = useRef(null)
 
   const allCategories = useMemo(() => Array.from(new Set(events.map((event) => event.category))), [events])
@@ -654,15 +653,15 @@ function HistographyVisualization({
     return Array.from(seen)
   }, [visibleEvents])
 
-  // Announce changes to visible events for screen readers
-  useEffect(() => {
+  // Live announcement for screen readers (computed during render, no extra re-render)
+  const liveAnnouncement = useMemo(() => {
     const count = visibleEvents.length
     const searchActive = normalizedSearchQuery.length > 0
     const categoryFiltered = activeCategories.length !== allCategories.length
     let message = `${count} event${count === 1 ? '' : 's'} in view`
     if (searchActive) message += `, filtered by search`
     if (categoryFiltered) message += `, filtered by category`
-    setLiveAnnouncement(message)
+    return message
   }, [visibleEvents.length, normalizedSearchQuery, activeCategories.length, allCategories.length])
 
   const categoryStats = useMemo(() => {
@@ -1119,10 +1118,10 @@ function HistographyVisualization({
     ? `https://en.wikipedia.org/wiki/${encodeURIComponent(selectedEvent.wikiLink.replaceAll(' ', '_'))}`
     : null
 
-  // Update viewport ref on resize
+  // Update viewport state on resize
   useEffect(() => {
     const updateViewport = () => {
-      viewportRef.current = { width: window.innerWidth, height: window.innerHeight }
+      setViewport({ width: window.innerWidth, height: window.innerHeight })
     }
     updateViewport()
     window.addEventListener('resize', updateViewport)
@@ -1334,8 +1333,8 @@ function HistographyVisualization({
           className="hover-tooltip"
           style={{
             display: 'block',
-            left: `${Math.min(tooltipPos.x + 14, viewportRef.current.width - 260)}px`,
-            top: `${Math.min(tooltipPos.y + 14, viewportRef.current.height - 150)}px`
+            left: `${Math.min(tooltipPos.x + 14, viewport.width - 260)}px`,
+            top: `${Math.min(tooltipPos.y + 14, viewport.height - 150)}px`
           }}
         >
           <strong>{hoveredEvent.title}</strong>
