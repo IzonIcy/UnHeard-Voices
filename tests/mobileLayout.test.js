@@ -3,10 +3,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-const css = readFileSync(
-  join(dirname(fileURLToPath(import.meta.url)), '../src/styles/timeline.css'),
-  'utf8',
-)
+const css = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../src/styles/timeline.css'), 'utf8')
 
 /** Return the body of an at-rule block, e.g. "@media (max-width: 820px)". */
 function atRuleBody(condition) {
@@ -65,31 +62,20 @@ function rules(block) {
 const MOBILE = atRuleBody('@media (max-width: 820px)')
 const mobileRules = rules(MOBILE)
 
-const bodiesFor = (selector, list = mobileRules) =>
-  list.filter((rule) =>
-    rule.prelude.split(',').some((part) => part.trim() === selector),
-  )
+const bodiesFor = (selector, list = mobileRules) => list.filter((rule) => rule.prelude.split(',').some((part) => part.trim() === selector))
 
 /** True when a rule body declares `property: value`, ignoring indentation. */
-const declares = (body, property, value) =>
-  new RegExp(`(^|;)\\s*${property}\\s*:\\s*${value}\\s*;`, 'm').test(body)
+const declares = (body, property, value) => new RegExp(`(^|;)\\s*${property}\\s*:\\s*${value}\\s*;`, 'm').test(body)
 
 describe('mobile layout guards', () => {
   // The regression: these were absolutely positioned over the canvas, which
   // hid the constellation and swallowed taps meant for the nodes.
-  const mustNotOverlay = [
-    '.insights-panel',
-    '.legend',
-    '.year-badge',
-    '.export-png-button',
-  ]
+  const mustNotOverlay = ['.insights-panel', '.legend', '.year-badge', '.export-png-button']
 
   for (const selector of mustNotOverlay) {
     it(`${selector} is never absolutely positioned on mobile`, () => {
       const matching = bodiesFor(selector)
-      expect(matching.length, `${selector} has no mobile rule`).toBeGreaterThan(
-        0,
-      )
+      expect(matching.length, `${selector} has no mobile rule`).toBeGreaterThan(0)
 
       for (const rule of matching) {
         expect(declares(rule.body, 'position', 'absolute')).toBe(false)
@@ -111,9 +97,7 @@ describe('mobile layout guards', () => {
     // A 2:1 box leaves the outer ring ~68px across for 60 nodes.
     const canvas = bodiesFor('.event-canvas')
     expect(canvas.length).toBeGreaterThan(0)
-    expect(canvas.map((rule) => rule.body).join('\n')).toMatch(
-      /aspect-ratio\s*:\s*1\s*\/\s*1/,
-    )
+    expect(canvas.map((rule) => rule.body).join('\n')).toMatch(/aspect-ratio\s*:\s*1\s*\/\s*1/)
   })
 
   it('puts the visualization before the filter rail on mobile', () => {
@@ -135,26 +119,16 @@ describe('mobile layout guards', () => {
       const matching = bodiesFor(selector, topLevel)
       expect(matching.length).toBeGreaterThan(0)
       expect(
-        matching.some((rule) =>
-          declares(rule.body, 'position', 'absolute'),
-        ),
-        `${selector} should still be an overlay on desktop`,
+        matching.some((rule) => declares(rule.body, 'position', 'absolute')),
+        `${selector} should still be an overlay on desktop`
       ).toBe(true)
     }
   })
 
   it('finds the selectors it thinks it does', () => {
     // If the stylesheet is restructured, fail loudly rather than pass silently.
-    for (const selector of [
-      ...mustNotOverlay,
-      '.timeline-stage',
-      '.category-rail',
-      '.event-canvas',
-    ]) {
-      expect(
-        bodiesFor(selector).length,
-        `${selector} not found in mobile block`,
-      ).toBeGreaterThan(0)
+    for (const selector of [...mustNotOverlay, '.timeline-stage', '.category-rail', '.event-canvas']) {
+      expect(bodiesFor(selector).length, `${selector} not found in mobile block`).toBeGreaterThan(0)
     }
   })
 })

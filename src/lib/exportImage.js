@@ -1,13 +1,14 @@
-const sanitize = (value) => String(value).replace(/[^a-z0-9_-]+/gi, '-').replace(/^-+|-+$/g, '') || 'timeline'
+const sanitize = (value) =>
+  String(value)
+    .replace(/[^a-z0-9_-]+/gi, '-')
+    .replace(/^-+|-+$/g, '') || 'timeline'
 
 /**
  * Derive the download filename for a canvas snapshot.
  * Pure so it can be unit-tested without a DOM.
  */
 export function exportFileName(selectedId) {
-  return selectedId == null
-    ? 'unheard-voices-timeline.png'
-    : `unheard-voices-event-${sanitize(selectedId)}.png`
+  return selectedId == null ? 'unheard-voices-timeline.png' : `unheard-voices-event-${sanitize(selectedId)}.png`
 }
 
 /**

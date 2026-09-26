@@ -1,11 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import {
-  TOOLTIP_HEIGHT,
-  TOOLTIP_WIDTH,
-  clampTooltipPosition,
-  isEmulatedFromTouch,
-  resolveHoverIndex,
-} from '../src/lib/interaction.js'
+import { TOOLTIP_HEIGHT, TOOLTIP_WIDTH, clampTooltipPosition, isEmulatedFromTouch, resolveHoverIndex } from '../src/lib/interaction.js'
 
 describe('clampTooltipPosition', () => {
   const viewport = { viewportWidth: 1280, viewportHeight: 720 }
@@ -13,7 +7,7 @@ describe('clampTooltipPosition', () => {
   it('offsets the tooltip from the pointer when there is room', () => {
     expect(clampTooltipPosition({ x: 300, y: 200, ...viewport })).toEqual({
       left: 314,
-      top: 214,
+      top: 214
     })
   })
 
@@ -22,7 +16,7 @@ describe('clampTooltipPosition', () => {
     const { left, top } = clampTooltipPosition({
       x: 1270,
       y: 710,
-      ...viewport,
+      ...viewport
     })
     expect(left + TOOLTIP_WIDTH).toBeLessThanOrEqual(viewport.viewportWidth)
     expect(top + TOOLTIP_HEIGHT).toBeLessThanOrEqual(viewport.viewportHeight)

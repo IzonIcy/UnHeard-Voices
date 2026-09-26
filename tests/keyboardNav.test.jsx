@@ -14,7 +14,7 @@ beforeAll(() => {
       addEventListener: () => {},
       removeEventListener: () => {},
       addListener: () => {},
-      removeListener: () => {},
+      removeListener: () => {}
     })
   }
 
@@ -28,8 +28,8 @@ beforeAll(() => {
         }
         return () => {}
       },
-      set: () => true,
-    },
+      set: () => true
+    }
   )
   vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(noop2d)
 })
@@ -49,16 +49,13 @@ const press = async (canvas, key) => {
       new window.KeyboardEvent('keydown', {
         key,
         bubbles: true,
-        cancelable: true,
-      }),
+        cancelable: true
+      })
     )
   })
 }
 
-const panelTitle = (container) =>
-  container.querySelector(
-    '.event-detail-panel h2, .event-detail-panel h3, .event-detail-panel',
-  )?.textContent ?? ''
+const panelTitle = (container) => container.querySelector('.event-detail-panel h2, .event-detail-panel h3, .event-detail-panel')?.textContent ?? ''
 
 describe('canvas keyboard navigation', () => {
   it('reaches the first event with ArrowRight, not the second', async () => {
@@ -151,8 +148,8 @@ describe('dismissal', () => {
         new window.KeyboardEvent('keydown', {
           key: 'Escape',
           bubbles: true,
-          cancelable: true,
-        }),
+          cancelable: true
+        })
       )
     })
 
@@ -174,8 +171,8 @@ describe('dismissal', () => {
         new window.KeyboardEvent('keydown', {
           key: 'Escape',
           bubbles: true,
-          cancelable: true,
-        }),
+          cancelable: true
+        })
       )
     })
 

@@ -576,9 +576,7 @@ function HistographyVisualization({
   const [startYear, endYear] = yearRange
 
   const yearFilteredEvents = useMemo(() => {
-    return events
-      .filter((event) => event.date >= startYear && event.date <= endYear)
-      .sort((a, b) => a.date - b.date)
+    return events.filter((event) => event.date >= startYear && event.date <= endYear).sort((a, b) => a.date - b.date)
   }, [events, startYear, endYear])
 
   const normalizedSearchQuery = searchQuery.trim().toLowerCase()
@@ -617,9 +615,7 @@ function HistographyVisualization({
 
       if (activeSearchScopes.has('place')) {
         const placeMatches = metadata.places.some((place) => place.toLowerCase().includes(normalizedSearchQuery))
-        const regionMatches = metadata.regions.some((regionTag) =>
-          formatTagLabel(regionTag, REGION_LABELS).toLowerCase().includes(normalizedSearchQuery)
-        )
+        const regionMatches = metadata.regions.some((regionTag) => formatTagLabel(regionTag, REGION_LABELS).toLowerCase().includes(normalizedSearchQuery))
         if (placeMatches || regionMatches) {
           return true
         }
@@ -637,15 +633,9 @@ function HistographyVisualization({
   // Built from every event, not the visible subset: a slot has to mean the
   // same thing whether or not a category filter is applied, or the whole
   // constellation reshuffles each time you toggle something.
-  const stableLayout = useMemo(
-    () => computeStarLayout(events.map((event) => event.id).sort((a, b) => a - b)),
-    [events]
-  )
+  const stableLayout = useMemo(() => computeStarLayout(events.map((event) => event.id).sort((a, b) => a - b)), [events])
 
-  const hoveredEvent = useMemo(
-    () => visibleEvents.find((event) => event.id === hoveredEventId) ?? null,
-    [hoveredEventId, visibleEvents]
-  )
+  const hoveredEvent = useMemo(() => visibleEvents.find((event) => event.id === hoveredEventId) ?? null, [hoveredEventId, visibleEvents])
 
   const visibleCategories = useMemo(() => {
     const seen = new Set()
@@ -768,7 +758,7 @@ function HistographyVisualization({
     ]
   }, [eventMetadata, events, eventsById, selectedEvent])
 
-  const selectedEventMetadata = selectedEvent ? eventMetadata[selectedEvent.id] ?? EMPTY_METADATA : EMPTY_METADATA
+  const selectedEventMetadata = selectedEvent ? (eventMetadata[selectedEvent.id] ?? EMPTY_METADATA) : EMPTY_METADATA
 
   const toggleCategory = (category) => {
     onActiveCategoriesChange((previous) => {
@@ -828,106 +818,112 @@ function HistographyVisualization({
     }
   }, [])
 
-  const drawTimelineView = useCallback((ctx, width, height, points) => {
-    const paddingX = 52
-    const paddingY = 42
-    const chartWidth = width - paddingX * 2
-    const chartHeight = height - paddingY * 2
-    const denominator = Math.max(endYear - startYear, 1)
-    const centerY = paddingY + chartHeight / 2
+  const drawTimelineView = useCallback(
+    (ctx, width, height, points) => {
+      const paddingX = 52
+      const paddingY = 42
+      const chartWidth = width - paddingX * 2
+      const chartHeight = height - paddingY * 2
+      const denominator = Math.max(endYear - startYear, 1)
+      const centerY = paddingY + chartHeight / 2
 
-    ctx.strokeStyle = 'rgba(224, 236, 248, 0.35)'
-    ctx.lineWidth = 1.4
-    ctx.beginPath()
-    ctx.moveTo(paddingX, centerY)
-    ctx.lineTo(width - paddingX, centerY)
-    ctx.stroke()
-
-    visibleEvents.forEach((event) => {
-      const slot = stableLayout[event.id]
-      if (!slot) return
-
-      const progress = (event.date - startYear) / denominator
-      const x = paddingX + progress * chartWidth
-      const y = paddingY + slot.graphY * chartHeight
-      points[event.id] = { x, y, hitRadius: HIT_RADIUS_PX }
-
-      const isHovered = hoveredEventId === event.id
-      const isSelected = selectedEvent?.id === event.id
-      const dotSize = isHovered || isSelected ? 9 : 6
-
-      const categoryColor = CATEGORY_COLORS[event.category] ?? FALLBACK_COLOR
-      const categoryGlow = CATEGORY_GLOWS[event.category] ?? FALLBACK_GLOW
-
-      if (isHovered || isSelected) {
-        ctx.fillStyle = categoryGlow
-        ctx.beginPath()
-        ctx.arc(x, y, dotSize + 7, 0, Math.PI * 2)
-        ctx.fill()
-      }
-
-      ctx.fillStyle = categoryColor
+      ctx.strokeStyle = 'rgba(224, 236, 248, 0.35)'
+      ctx.lineWidth = 1.4
       ctx.beginPath()
-      ctx.arc(x, y, dotSize, 0, Math.PI * 2)
-      ctx.fill()
-
-      if (isHovered || isSelected) {
-        ctx.strokeStyle = categoryColor
-        ctx.lineWidth = 2
-        ctx.stroke()
-      }
-    })
-  }, [endYear, hoveredEventId, selectedEvent, stableLayout, startYear, visibleEvents])
-
-  const drawConstellationView = useCallback((ctx, width, height, points) => {
-    const centerX = width / 2
-    const centerY = height / 2
-    const maxRadius = Math.min(width, height) / 2 - 54
-
-    ctx.strokeStyle = 'rgba(70, 57, 38, 0.18)'
-    ctx.lineWidth = 1
-    for (let ring = 1; ring <= 5; ring += 1) {
-      const r = (maxRadius / 5) * ring
-      ctx.beginPath()
-      ctx.arc(centerX, centerY, r, 0, Math.PI * 2)
+      ctx.moveTo(paddingX, centerY)
+      ctx.lineTo(width - paddingX, centerY)
       ctx.stroke()
-    }
 
-    visibleEvents.forEach((event) => {
-      const slot = stableLayout[event.id]
-      if (!slot) return
+      visibleEvents.forEach((event) => {
+        const slot = stableLayout[event.id]
+        if (!slot) return
 
-      const radius = slot.ringRadius * maxRadius
-      const x = centerX + Math.cos(slot.ringAngle) * radius
-      const y = centerY + Math.sin(slot.ringAngle) * radius
-      points[event.id] = { x, y, hitRadius: HIT_RADIUS_PX }
+        const progress = (event.date - startYear) / denominator
+        const x = paddingX + progress * chartWidth
+        const y = paddingY + slot.graphY * chartHeight
+        points[event.id] = { x, y, hitRadius: HIT_RADIUS_PX }
 
-      const isHovered = hoveredEventId === event.id
-      const isSelected = selectedEvent?.id === event.id
-      const dotSize = isHovered || isSelected ? 9 : 6
+        const isHovered = hoveredEventId === event.id
+        const isSelected = selectedEvent?.id === event.id
+        const dotSize = isHovered || isSelected ? 9 : 6
 
-      const categoryColor = CATEGORY_COLORS[event.category] ?? FALLBACK_COLOR
-      const categoryGlow = CATEGORY_GLOWS[event.category] ?? FALLBACK_GLOW
+        const categoryColor = CATEGORY_COLORS[event.category] ?? FALLBACK_COLOR
+        const categoryGlow = CATEGORY_GLOWS[event.category] ?? FALLBACK_GLOW
 
-      if (isHovered || isSelected) {
-        ctx.fillStyle = categoryGlow
+        if (isHovered || isSelected) {
+          ctx.fillStyle = categoryGlow
+          ctx.beginPath()
+          ctx.arc(x, y, dotSize + 7, 0, Math.PI * 2)
+          ctx.fill()
+        }
+
+        ctx.fillStyle = categoryColor
         ctx.beginPath()
-        ctx.arc(x, y, dotSize + 7, 0, Math.PI * 2)
+        ctx.arc(x, y, dotSize, 0, Math.PI * 2)
         ctx.fill()
-      }
 
-      ctx.fillStyle = categoryColor
-      ctx.beginPath()
-      ctx.arc(x, y, dotSize, 0, Math.PI * 2)
-      ctx.fill()
+        if (isHovered || isSelected) {
+          ctx.strokeStyle = categoryColor
+          ctx.lineWidth = 2
+          ctx.stroke()
+        }
+      })
+    },
+    [endYear, hoveredEventId, selectedEvent, stableLayout, startYear, visibleEvents]
+  )
 
-      if (isHovered || isSelected) {
-        ctx.strokeStyle = categoryColor
-        ctx.lineWidth = 2
+  const drawConstellationView = useCallback(
+    (ctx, width, height, points) => {
+      const centerX = width / 2
+      const centerY = height / 2
+      const maxRadius = Math.min(width, height) / 2 - 54
+
+      ctx.strokeStyle = 'rgba(70, 57, 38, 0.18)'
+      ctx.lineWidth = 1
+      for (let ring = 1; ring <= 5; ring += 1) {
+        const r = (maxRadius / 5) * ring
+        ctx.beginPath()
+        ctx.arc(centerX, centerY, r, 0, Math.PI * 2)
         ctx.stroke()
       }
-    })
-  }, [hoveredEventId, selectedEvent, stableLayout, visibleEvents])
+
+      visibleEvents.forEach((event) => {
+        const slot = stableLayout[event.id]
+        if (!slot) return
+
+        const radius = slot.ringRadius * maxRadius
+        const x = centerX + Math.cos(slot.ringAngle) * radius
+        const y = centerY + Math.sin(slot.ringAngle) * radius
+        points[event.id] = { x, y, hitRadius: HIT_RADIUS_PX }
+
+        const isHovered = hoveredEventId === event.id
+        const isSelected = selectedEvent?.id === event.id
+        const dotSize = isHovered || isSelected ? 9 : 6
+
+        const categoryColor = CATEGORY_COLORS[event.category] ?? FALLBACK_COLOR
+        const categoryGlow = CATEGORY_GLOWS[event.category] ?? FALLBACK_GLOW
+
+        if (isHovered || isSelected) {
+          ctx.fillStyle = categoryGlow
+          ctx.beginPath()
+          ctx.arc(x, y, dotSize + 7, 0, Math.PI * 2)
+          ctx.fill()
+        }
+
+        ctx.fillStyle = categoryColor
+        ctx.beginPath()
+        ctx.arc(x, y, dotSize, 0, Math.PI * 2)
+        ctx.fill()
+
+        if (isHovered || isSelected) {
+          ctx.strokeStyle = categoryColor
+          ctx.lineWidth = 2
+          ctx.stroke()
+        }
+      })
+    },
+    [hoveredEventId, selectedEvent, stableLayout, visibleEvents]
+  )
 
   // The backing store is derived from the laid-out box, so it has to be
   // recomputed whenever that box changes. ResizeObserver catches container
@@ -1025,8 +1021,7 @@ function HistographyVisualization({
     return closest
   }
 
-  const getCanvasPoint = (canvas, clientX, clientY) =>
-    toCanvasSpace(canvas.getBoundingClientRect(), clientX, clientY)
+  const getCanvasPoint = (canvas, clientX, clientY) => toCanvasSpace(canvas.getBoundingClientRect(), clientX, clientY)
 
   const updateHoverFromPointer = (clientX, clientY) => {
     const canvas = canvasRef.current
@@ -1223,9 +1218,7 @@ function HistographyVisualization({
     [tooltipPos, viewport]
   )
 
-  const wikiUrl = selectedEvent
-    ? `https://en.wikipedia.org/wiki/${encodeURIComponent(selectedEvent.wikiLink.replaceAll(' ', '_'))}`
-    : null
+  const wikiUrl = selectedEvent ? `https://en.wikipedia.org/wiki/${encodeURIComponent(selectedEvent.wikiLink.replaceAll(' ', '_'))}` : null
 
   // Update viewport state on resize
   useEffect(() => {
@@ -1234,9 +1227,7 @@ function HistographyVisualization({
       const height = window.innerHeight
       // Returning the same object lets React bail out instead of re-rendering
       // every insight card and list row on each resize tick.
-      setViewport((previous) =>
-        previous.width === width && previous.height === height ? previous : { width, height }
-      )
+      setViewport((previous) => (previous.width === width && previous.height === height ? previous : { width, height }))
     }
     updateViewport()
     window.addEventListener('resize', updateViewport)
@@ -1248,7 +1239,9 @@ function HistographyVisualization({
       <div className="timeline-shell">
         <aside className="category-rail" aria-label="Category and search controls">
           <h2 className="rail-title">Unheard Voices</h2>
-          <p className="rail-range">{minYear}-{maxYear}</p>
+          <p className="rail-range">
+            {minYear}-{maxYear}
+          </p>
 
           <div className="search-controls">
             <label className="search-label" htmlFor="event-search">
@@ -1314,15 +1307,7 @@ function HistographyVisualization({
             <label className="visually-hidden" htmlFor="start-year-slider">
               Start year
             </label>
-            <input
-              id="start-year-slider"
-              type="range"
-              min={minYear}
-              max={endYear}
-              value={startYear}
-              onChange={handleStartYearChange}
-              className="time-slider"
-            />
+            <input id="start-year-slider" type="range" min={minYear} max={endYear} value={startYear} onChange={handleStartYearChange} className="time-slider" />
             <label className="visually-hidden" htmlFor="end-year-slider">
               End year
             </label>
@@ -1349,11 +1334,7 @@ function HistographyVisualization({
                   const isSelected = selectedEvent?.id === event.id
                   return (
                     <li key={event.id}>
-                      <button
-                        type="button"
-                        className={`event-browser-item ${isSelected ? 'active' : ''}`}
-                        onClick={() => onEventSelect(event)}
-                      >
+                      <button type="button" className={`event-browser-item ${isSelected ? 'active' : ''}`} onClick={() => onEventSelect(event)}>
                         <span className="event-browser-year">{event.year}</span>
                         <span className="event-browser-name">{event.title}</span>
                       </button>
@@ -1370,11 +1351,7 @@ function HistographyVisualization({
             {startYear} - {endYear}
           </div>
 
-          <button
-            type="button"
-            className="export-png-button"
-            onClick={handleExport}
-          >
+          <button type="button" className="export-png-button" onClick={handleExport}>
             Export PNG
           </button>
           {exportUnavailable && (
@@ -1384,11 +1361,7 @@ function HistographyVisualization({
           )}
 
           {/* Live region for screen reader announcements */}
-          <div
-            className="visually-hidden"
-            aria-live="polite"
-            aria-atomic="true"
-          >
+          <div className="visually-hidden" aria-live="polite" aria-atomic="true">
             {liveAnnouncement}
           </div>
 
@@ -1458,12 +1431,7 @@ function HistographyVisualization({
       )}
 
       {selectedEvent && (
-        <div
-          className="event-detail-panel"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="event-detail-title"
-        >
+        <div className="event-detail-panel" role="dialog" aria-modal="true" aria-labelledby="event-detail-title">
           <button className="close-btn" type="button" aria-label="Close event details" onClick={() => onEventSelect(null)}>
             ×
           </button>

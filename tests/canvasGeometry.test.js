@@ -1,20 +1,14 @@
 import { describe, it, expect } from 'vitest'
-import {
-  computeBackingStore,
-  toCanvasSpace,
-  HIT_RADIUS_PX,
-} from '../src/lib/canvasGeometry.js'
+import { computeBackingStore, toCanvasSpace, HIT_RADIUS_PX } from '../src/lib/canvasGeometry.js'
 
 describe('computeBackingStore', () => {
   it('scales the backing store by device pixel ratio', () => {
-    expect(
-      computeBackingStore({ cssWidth: 800, cssHeight: 400, dpr: 2 }),
-    ).toEqual({
+    expect(computeBackingStore({ cssWidth: 800, cssHeight: 400, dpr: 2 })).toEqual({
       cssWidth: 800,
       cssHeight: 400,
       width: 1600,
       height: 800,
-      dpr: 2,
+      dpr: 2
     })
   })
 
@@ -24,33 +18,29 @@ describe('computeBackingStore', () => {
     const result = computeBackingStore({
       cssWidth: 1001,
       cssHeight: 401,
-      dpr: 1.5,
+      dpr: 1.5
     })
     expect(result.cssWidth).toBe(1001)
     expect(result.width).toBe(1502)
   })
 
   it('leaves a 1x display untouched', () => {
-    expect(
-      computeBackingStore({ cssWidth: 800, cssHeight: 400, dpr: 1 }),
-    ).toEqual({
+    expect(computeBackingStore({ cssWidth: 800, cssHeight: 400, dpr: 1 })).toEqual({
       cssWidth: 800,
       cssHeight: 400,
       width: 800,
       height: 400,
-      dpr: 1,
+      dpr: 1
     })
   })
 
   it('rounds fractional device pixels', () => {
-    expect(
-      computeBackingStore({ cssWidth: 801, cssHeight: 401, dpr: 1.5 }),
-    ).toEqual({
+    expect(computeBackingStore({ cssWidth: 801, cssHeight: 401, dpr: 1.5 })).toEqual({
       cssWidth: 801,
       cssHeight: 401,
       width: 1202,
       height: 602,
-      dpr: 1.5,
+      dpr: 1.5
     })
   })
 
@@ -62,7 +52,7 @@ describe('computeBackingStore', () => {
         cssHeight: 600,
         width: 2400,
         height: 1200,
-        dpr: 2,
+        dpr: 2
       })
     }
   })
@@ -71,7 +61,7 @@ describe('computeBackingStore', () => {
     const { width, height } = computeBackingStore({
       cssWidth: 10,
       cssHeight: 0,
-      dpr: 2,
+      dpr: 2
     })
     expect(width).toBeGreaterThan(0)
     expect(height).toBeGreaterThan(0)
@@ -79,9 +69,7 @@ describe('computeBackingStore', () => {
 
   it('guards against a zero or non-finite device pixel ratio', () => {
     for (const dpr of [0, -1, Number.NaN, undefined]) {
-      expect(
-        computeBackingStore({ cssWidth: 800, cssHeight: 400, dpr }).dpr,
-      ).toBe(1)
+      expect(computeBackingStore({ cssWidth: 800, cssHeight: 400, dpr }).dpr).toBe(1)
     }
   })
 })
@@ -100,12 +88,8 @@ describe('toCanvasSpace', () => {
   })
 
   it('returns null for a degenerate rect instead of Infinity or NaN', () => {
-    expect(
-      toCanvasSpace({ left: 0, top: 0, width: 0, height: 400 }, 10, 10),
-    ).toBeNull()
-    expect(
-      toCanvasSpace({ left: 0, top: 0, width: 800, height: 0 }, 10, 10),
-    ).toBeNull()
+    expect(toCanvasSpace({ left: 0, top: 0, width: 0, height: 400 }, 10, 10)).toBeNull()
+    expect(toCanvasSpace({ left: 0, top: 0, width: 800, height: 0 }, 10, 10)).toBeNull()
   })
 
   it('keeps hit testing within the visible box on a phone-sized canvas', () => {
@@ -115,8 +99,6 @@ describe('toCanvasSpace', () => {
     const phone = { left: 0, top: 0, width: 360, height: 180 }
     const point = toCanvasSpace(phone, 180 + HIT_RADIUS_PX - 1, 90)
     expect(point).not.toBeNull()
-    expect(Math.hypot(point.x - 180, point.y - 90)).toBeLessThanOrEqual(
-      HIT_RADIUS_PX,
-    )
+    expect(Math.hypot(point.x - 180, point.y - 90)).toBeLessThanOrEqual(HIT_RADIUS_PX)
   })
 })

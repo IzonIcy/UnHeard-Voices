@@ -13,7 +13,7 @@ beforeAll(() => {
       addEventListener: () => {},
       removeEventListener: () => {},
       addListener: () => {},
-      removeListener: () => {},
+      removeListener: () => {}
     })
   }
 
@@ -22,27 +22,20 @@ beforeAll(() => {
     {
       get: (_target, prop) => {
         if (prop === 'measureText') return () => ({ width: 0 })
-        if (
-          prop === 'createLinearGradient' ||
-					prop === 'createRadialGradient'
-        ) {
+        if (prop === 'createLinearGradient' || prop === 'createRadialGradient') {
           return () => ({ addColorStop: () => {} })
         }
         return () => {}
       },
-      set: () => true,
-    },
+      set: () => true
+    }
   )
   vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(noop2d)
 
   // jsdom performs no layout, so the canvas reports a zero-sized box. Give it
   // a realistic one and record the DPR the component reads.
-  vi.spyOn(HTMLCanvasElement.prototype, 'clientWidth', 'get').mockReturnValue(
-    CSS_WIDTH,
-  )
-  vi.spyOn(HTMLCanvasElement.prototype, 'clientHeight', 'get').mockReturnValue(
-    CSS_HEIGHT,
-  )
+  vi.spyOn(HTMLCanvasElement.prototype, 'clientWidth', 'get').mockReturnValue(CSS_WIDTH)
+  vi.spyOn(HTMLCanvasElement.prototype, 'clientHeight', 'get').mockReturnValue(CSS_HEIGHT)
 })
 
 afterEach(() => {
@@ -103,7 +96,7 @@ describe('canvas backing store', () => {
       },
       removeEventListener: (_type, handler) => listeners.delete(handler),
       addListener: () => {},
-      removeListener: () => {},
+      removeListener: () => {}
     }))
 
     const { container, canvas } = await renderApp()

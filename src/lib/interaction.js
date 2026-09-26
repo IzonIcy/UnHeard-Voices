@@ -19,18 +19,12 @@ const TOOLTIP_OFFSET = 14
  * sized for a typical entry and undershoots an unusually long one.
  */
 export function clampTooltipPosition({ x, y, viewportWidth, viewportHeight }) {
-  const maxLeft = Math.max(
-    VIEWPORT_MARGIN,
-    viewportWidth - TOOLTIP_WIDTH - VIEWPORT_MARGIN,
-  )
-  const maxTop = Math.max(
-    VIEWPORT_MARGIN,
-    viewportHeight - TOOLTIP_HEIGHT - VIEWPORT_MARGIN,
-  )
+  const maxLeft = Math.max(VIEWPORT_MARGIN, viewportWidth - TOOLTIP_WIDTH - VIEWPORT_MARGIN)
+  const maxTop = Math.max(VIEWPORT_MARGIN, viewportHeight - TOOLTIP_HEIGHT - VIEWPORT_MARGIN)
 
   return {
     left: Math.min(Math.max(VIEWPORT_MARGIN, x + TOOLTIP_OFFSET), maxLeft),
-    top: Math.min(Math.max(VIEWPORT_MARGIN, y + TOOLTIP_OFFSET), maxTop),
+    top: Math.min(Math.max(VIEWPORT_MARGIN, y + TOOLTIP_OFFSET), maxTop)
   }
 }
 

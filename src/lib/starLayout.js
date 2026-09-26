@@ -24,7 +24,7 @@ export function computeStarLayout(orderedIds) {
     layout[id] = {
       graphY: 0.12 + stableValue(id, 1) * 0.76,
       ringRadius: 0.26 + stableValue(id, 2) * 0.72,
-      ringAngle: (index / total) * Math.PI * 2,
+      ringAngle: (index / total) * Math.PI * 2
     }
   })
 

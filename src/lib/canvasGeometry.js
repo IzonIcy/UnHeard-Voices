@@ -30,7 +30,7 @@ export function computeBackingStore({ cssWidth, cssHeight, dpr }) {
     cssHeight: height,
     width: Math.round(width * ratio),
     height: Math.round(height * ratio),
-    dpr: ratio,
+    dpr: ratio
   }
 }
 
@@ -46,7 +46,7 @@ export function toCanvasSpace(rect, clientX, clientY) {
 
   return {
     x: clientX - rect.left,
-    y: clientY - rect.top,
+    y: clientY - rect.top
   }
 }
 

@@ -42,15 +42,10 @@ describe('computeStarLayout', () => {
     // Stability is worthless if it collapses every node into one arc, so the
     // canonical ordering has to keep the distribution even.
     const layout = computeStarLayout(ALL_IDS)
-    const angles = ALL_IDS.map((id) => layout[id].ringAngle).sort(
-      (a, b) => a - b,
-    )
+    const angles = ALL_IDS.map((id) => layout[id].ringAngle).sort((a, b) => a - b)
 
     const gaps = angles.map((angle, index) => {
-      const next =
-				index === angles.length - 1
-				  ? angles[0] + Math.PI * 2
-				  : angles[index + 1]
+      const next = index === angles.length - 1 ? angles[0] + Math.PI * 2 : angles[index + 1]
       return next - angle
     })
 

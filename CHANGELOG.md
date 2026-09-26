@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   states the convention for editors. Every JS file in the repo was brought into
   line; the reformat changes no behaviour.
 - `vitest.config.js` was written in a different style to the rest of the repo.
+- Added `biome.json`. The editor tooling formats `.js`/`.jsx`/`.json` with Biome,
+  which had no project config and so ran on its defaults: tabs, double quotes and
+  semicolons, which is where the drift above came from. It now matches the
+  documented style. CSS and Markdown are excluded because Prettier owns those, and
+  the two disagreed on line width.
 
 ### Fixed
 

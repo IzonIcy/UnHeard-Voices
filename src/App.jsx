@@ -63,8 +63,8 @@ const createInitialState = ({ minYear, maxYear, allCategories, eventIds }) => {
 }
 
 function App() {
-  const minYear = useMemo(() => Math.min(...eventsData.map(e => e.date)), [])
-  const maxYear = useMemo(() => Math.max(...eventsData.map(e => e.date)), [])
+  const minYear = useMemo(() => Math.min(...eventsData.map((e) => e.date)), [])
+  const maxYear = useMemo(() => Math.max(...eventsData.map((e) => e.date)), [])
   const allCategories = useMemo(() => Array.from(new Set(eventsData.map((event) => event.category))), [])
   const eventIdSet = useMemo(() => new Set(eventsData.map((event) => event.id)), [])
 
@@ -116,47 +116,27 @@ function App() {
     const nextQuery = params.toString()
     const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}`
     window.history.replaceState(null, '', nextUrl)
-  }, [
-    activeCategories,
-    allCategories.length,
-    eventIdSet,
-    maxYear,
-    minYear,
-    searchQuery,
-    searchScopes,
-    selectedEventId,
-    viewMode,
-    yearRange
-  ])
+  }, [activeCategories, allCategories.length, eventIdSet, maxYear, minYear, searchQuery, searchScopes, selectedEventId, viewMode, yearRange])
 
-  const selectedEvent = useMemo(
-    () => eventsData.find((event) => event.id === selectedEventId) ?? null,
-    [selectedEventId]
-  )
+  const selectedEvent = useMemo(() => eventsData.find((event) => event.id === selectedEventId) ?? null, [selectedEventId])
 
   return (
     <div className="app">
       <header className="app-header">
         <h1>Unheard Voices</h1>
-        <p>Exploring unrepresented histories from {minYear}-{maxYear}</p>
+        <p>
+          Exploring unrepresented histories from {minYear}-{maxYear}
+        </p>
         <div className="view-mode-toggle">
-          <button 
-            type="button"
-            className={viewMode === 'timeline' ? 'active' : ''}
-            onClick={() => setViewMode('timeline')}
-          >
+          <button type="button" className={viewMode === 'timeline' ? 'active' : ''} onClick={() => setViewMode('timeline')}>
             Timeline
           </button>
-          <button 
-            type="button"
-            className={viewMode === 'constellation' ? 'active' : ''}
-            onClick={() => setViewMode('constellation')}
-          >
+          <button type="button" className={viewMode === 'constellation' ? 'active' : ''} onClick={() => setViewMode('constellation')}>
             Constellation
           </button>
         </div>
       </header>
-      
+
       <main>
         <HistographyVisualization
           events={eventsData}
