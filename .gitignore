@@ -8,3 +8,6 @@ opencode.json
 # Agent instruction files
 AGENTS.md
 CLAUDE.md
+
+# Browser verification artifacts
+.playwright-mcp/

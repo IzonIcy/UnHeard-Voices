@@ -419,7 +419,9 @@ body {
 .export-png-button {
   position: absolute;
   top: 12px;
-  right: 14px;
+  /* Top-left: the insights panel owns the top-right corner, and at a higher
+     z-index this button used to sit on top of the Leading Category card. */
+  left: 14px;
   z-index: 20;
   background: rgba(14, 19, 26, 0.92);
   border: 1px solid rgba(193, 211, 234, 0.24);
