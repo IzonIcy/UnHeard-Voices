@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `js-yaml` was held at 4.3.1 by eslint's dependency tree, below the 4.3.2 that fixes GHSA-2883-xcg3-v3hh (high severity, unbounded CPU use parsing merge sources). Pinned through a pnpm override.
+
 - On narrow screens the insights panel and legend were absolutely positioned over the canvas, hiding most of the constellation and swallowing taps meant for the nodes. The stage now lays its parts out in normal flow, and the visualization leads the filter rail instead of sitting ~1100px below the fold. Guarded by `tests/mobileLayout.test.js`.
 - The PNG export button shared the top-right corner with the insights panel and covered the Leading Category card.
 
