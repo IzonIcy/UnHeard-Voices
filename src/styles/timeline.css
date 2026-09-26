@@ -924,8 +924,9 @@ body {
   }
 
   .event-canvas {
-    width: 100% !important;
-    height: auto !important;
+    /* A 2:1 box is too letterboxed to fit the constellation on a phone:
+       the outer ring ends up ~68px across for 60 nodes. Square it off. */
+    aspect-ratio: 1 / 1;
   }
 
   .insights-panel {

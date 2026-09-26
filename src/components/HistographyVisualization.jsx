@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { downloadCanvasAsPng, exportFileName } from '../lib/exportImage.js'
 import { computeBackingStore, toCanvasSpace, HIT_RADIUS_PX } from '../lib/canvasGeometry.js'
-import { clampTooltipPosition, resolveHoverIndex } from '../lib/interaction.js'
+import { clampTooltipPosition, resolveHoverIndex, isEmulatedFromTouch } from '../lib/interaction.js'
 import { computeStarLayout } from '../lib/starLayout.js'
 import '../styles/timeline.css'
 
@@ -551,6 +551,9 @@ function HistographyVisualization({
   // Newest pointer position, so a throttled frame reads the latest coords
   // rather than whichever event happened to arrive first.
   const pointerRef = useRef({ x: 0, y: 0 })
+  // True when the last input was a touch, so the compatibility mouse events
+  // a tap synthesises do not resurrect the hover highlight.
+  const lastTouchAtRef = useRef(null)
 
   const allCategories = useMemo(() => Array.from(new Set(events.map((event) => event.category))), [events])
   const eventsById = useMemo(() => new Map(events.map((event) => [event.id, event])), [events])
@@ -931,15 +934,35 @@ function HistographyVisualization({
   // reflows (the category rail collapsing, a sidebar opening) that a window
   // resize listener would miss.
   useEffect(() => {
+    const bump = () => setCanvasRevision((revision) => revision + 1)
     const canvas = canvasRef.current
-    if (!canvas || typeof ResizeObserver === 'undefined') return
 
-    const observer = new ResizeObserver(() => {
-      setCanvasRevision((revision) => revision + 1)
-    })
+    // devicePixelRatio changes on page zoom and when a window moves between
+    // displays, without the element box changing at all, so the box observer
+    // below cannot see it. Without this the crispness fix silently un-applies.
+    const dprQuery = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`)
+    dprQuery.addEventListener('change', bump)
+
+    if (!canvas) {
+      return () => dprQuery.removeEventListener('change', bump)
+    }
+
+    if (typeof ResizeObserver === 'undefined') {
+      // Old environments still need to re-lay-out on window resize.
+      window.addEventListener('resize', bump)
+      return () => {
+        dprQuery.removeEventListener('change', bump)
+        window.removeEventListener('resize', bump)
+      }
+    }
+
+    const observer = new ResizeObserver(bump)
     observer.observe(canvas)
 
-    return () => observer.disconnect()
+    return () => {
+      dprQuery.removeEventListener('change', bump)
+      observer.disconnect()
+    }
   }, [])
 
   // Redraw the canvas whenever the view inputs (or the memoized draw
@@ -954,7 +977,7 @@ function HistographyVisualization({
 
     // The backing store tracks the laid-out CSS box times the device pixel
     // ratio, so hairlines stay crisp on retina instead of being resampled.
-    const { width, height, dpr } = computeBackingStore({
+    const { width, height, cssWidth, cssHeight, dpr } = computeBackingStore({
       cssWidth: canvas.clientWidth,
       cssHeight: canvas.clientHeight,
       dpr: window.devicePixelRatio
@@ -967,9 +990,6 @@ function HistographyVisualization({
     // maps them onto the denser backing store.
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-    // Logical size the draw callbacks lay out against, in CSS pixels.
-    const cssWidth = width / dpr
-    const cssHeight = height / dpr
     const points = {}
 
     ctx.clearRect(0, 0, cssWidth, cssHeight)
@@ -1024,7 +1044,10 @@ function HistographyVisualization({
   }
 
   const handleCanvasMouseMove = (event) => {
-    pointerRef.current = { x: event.clientX, y: event.clientY }
+    if (isEmulatedFromTouch(lastTouchAtRef.current, Date.now())) return
+
+    pointerRef.current.x = event.clientX
+    pointerRef.current.y = event.clientY
     // Throttle to one frame, but keep only the newest coordinates: dropping
     // events entirely left the highlight up to a frame behind the cursor.
     if (rafIdRef.current) return
@@ -1047,6 +1070,8 @@ function HistographyVisualization({
   useEffect(() => cancelPendingHoverFrame, [])
 
   const handleCanvasClick = (event) => {
+    if (isEmulatedFromTouch(lastTouchAtRef.current, Date.now())) return
+
     const found = updateHoverFromPointer(event.clientX, event.clientY)
     if (found) {
       onEventSelect(found)
@@ -1054,6 +1079,8 @@ function HistographyVisualization({
   }
 
   const handleCanvasTouchStart = (event) => {
+    lastTouchAtRef.current = Date.now()
+
     const touch = event.touches[0]
     if (!touch) return
 
@@ -1097,6 +1124,7 @@ function HistographyVisualization({
   }
 
   const handleCanvasTouchCancel = () => {
+    cancelPendingHoverFrame()
     // iOS Safari fires touchcancel when it reclaims the gesture for
     // scrolling, which would otherwise leave a stale tap target behind.
     touchStartEventIdRef.current = null

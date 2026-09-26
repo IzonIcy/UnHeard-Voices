@@ -87,4 +87,37 @@ describe("canvas backing store", () => {
 		expect(canvas.height).toBe(CSS_HEIGHT * 1.5);
 		container.remove();
 	});
+  it("resizes the backing store when the device pixel ratio changes", async () => {
+    // Zoom, or dragging the window to another display, changes devicePixelRatio
+    // without the element box changing. matchMedia fires; the ResizeObserver
+    // does not, so without this the 1x buffer stays stretched on a 2x screen.
+    let fireDprChange = () => {};
+    const listeners = new Set();
+    vi.stubGlobal("devicePixelRatio", 1);
+    vi.stubGlobal("matchMedia", (query) => ({
+      matches: false,
+      media: query,
+      addEventListener: (_type, handler) => {
+        listeners.add(handler);
+        fireDprChange = handler;
+      },
+      removeEventListener: (_type, handler) => listeners.delete(handler),
+      addListener: () => {},
+      removeListener: () => {},
+    }));
+
+    const { container, canvas } = await renderApp();
+    expect(canvas.width).toBe(CSS_WIDTH);
+
+    // The component reads devicePixelRatio at draw time, so move it before the
+    // change event asks for a repaint.
+    vi.stubGlobal("devicePixelRatio", 2);
+    await act(async () => {
+      fireDprChange();
+    });
+
+    expect(canvas.width).toBe(CSS_WIDTH * 2);
+    expect(canvas.height).toBe(CSS_HEIGHT * 2);
+    container.remove();
+  });
 });

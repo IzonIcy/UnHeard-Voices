@@ -2,18 +2,21 @@
 // be tested without a canvas or a layout engine.
 
 // .hover-tooltip is max-width 240 + 14px padding each side + 1px borders.
-const TOOLTIP_WIDTH = 270;
+export const TOOLTIP_WIDTH = 270;
 // Title + year + a 100 character description slice, with padding.
-const TOOLTIP_HEIGHT = 170;
+export const TOOLTIP_HEIGHT = 170;
 const VIEWPORT_MARGIN = 8;
 const TOOLTIP_OFFSET = 14;
 
 /**
- * Keep the tooltip fully on screen. Clamps against the real box size in both
- * directions — the previous version only clamped the upper bound against
- * hardcoded numbers smaller than the tooltip, so hovering a node in the
- * bottom-right corner pushed it off screen, and a viewport smaller than those
- * constants produced negative offsets.
+ * Keep the tooltip on screen, clamping both bounds. The previous version only
+ * clamped the upper bound against numbers smaller than the tooltip, so
+ * hovering the bottom-right corner pushed it off screen, and a viewport
+ * smaller than those constants yielded negative offsets.
+ *
+ * The box size is an estimate: .hover-tooltip has a max-width but no
+ * max-height, so the real height tracks the title length. TOOLTIP_HEIGHT is
+ * sized for a typical entry and undershoots an unusually long one.
  */
 export function clampTooltipPosition({ x, y, viewportWidth, viewportHeight }) {
 	const maxLeft = Math.max(
@@ -71,4 +74,20 @@ export function resolveHoverIndex(key, currentIndex, eventCount) {
 	}
 
 	return null;
+}
+
+/**
+ * A tap makes the browser synthesise mouseover/mousemove/mousedown/mouseup/
+ * click at the release point, which would otherwise re-arm the hover the
+ * touch handler just cleared. Anything within the window is treated as
+ * emulated rather than as a real mouse.
+ */
+export function isEmulatedFromTouch(lastTouchAt, now, window = 500) {
+  // null means no touch has been seen, which is distinct from a touch at
+  // timestamp 0: without the sentinel, a page that has never been touched
+  // would treat its first real mouse move as emulated for half a second.
+  if (lastTouchAt === null) {
+    return false;
+  }
+  return now - lastTouchAt < window;
 }

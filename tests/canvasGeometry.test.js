@@ -10,16 +10,32 @@ describe("computeBackingStore", () => {
 		expect(
 			computeBackingStore({ cssWidth: 800, cssHeight: 400, dpr: 2 }),
 		).toEqual({
+			cssWidth: 800,
+			cssHeight: 400,
 			width: 1600,
 			height: 800,
 			dpr: 2,
 		});
 	});
 
+	it("returns the CSS size it was given, not a re-derived one", () => {
+		// Callers lay out against cssWidth. Dividing the rounded backing store
+		// back down by dpr loses the remainder on a fractional ratio.
+		const result = computeBackingStore({
+			cssWidth: 1001,
+			cssHeight: 401,
+			dpr: 1.5,
+		});
+		expect(result.cssWidth).toBe(1001);
+		expect(result.width).toBe(1502);
+	});
+
 	it("leaves a 1x display untouched", () => {
 		expect(
 			computeBackingStore({ cssWidth: 800, cssHeight: 400, dpr: 1 }),
 		).toEqual({
+			cssWidth: 800,
+			cssHeight: 400,
 			width: 800,
 			height: 400,
 			dpr: 1,
@@ -30,6 +46,8 @@ describe("computeBackingStore", () => {
 		expect(
 			computeBackingStore({ cssWidth: 801, cssHeight: 401, dpr: 1.5 }),
 		).toEqual({
+			cssWidth: 801,
+			cssHeight: 401,
 			width: 1202,
 			height: 602,
 			dpr: 1.5,
@@ -40,6 +58,8 @@ describe("computeBackingStore", () => {
 		// jsdom, first paint, or a display:none ancestor all report 0.
 		for (const cssWidth of [0, -10, Number.NaN, undefined, null]) {
 			expect(computeBackingStore({ cssWidth, cssHeight: 0, dpr: 2 })).toEqual({
+				cssWidth: 1200,
+				cssHeight: 600,
 				width: 2400,
 				height: 1200,
 				dpr: 2,

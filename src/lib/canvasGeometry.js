@@ -24,6 +24,10 @@ export function computeBackingStore({ cssWidth, cssHeight, dpr }) {
 	const ratio = positiveOr(dpr, 1);
 
 	return {
+		// The CSS size actually handed in, so callers lay out against it rather
+		// than dividing the backing store back down and losing the remainder.
+		cssWidth: width,
+		cssHeight: height,
 		width: Math.round(width * ratio),
 		height: Math.round(height * ratio),
 		dpr: ratio,

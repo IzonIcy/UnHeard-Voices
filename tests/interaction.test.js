@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
 import {
+	TOOLTIP_HEIGHT,
+	TOOLTIP_WIDTH,
 	clampTooltipPosition,
+	isEmulatedFromTouch,
 	resolveHoverIndex,
 } from "../src/lib/interaction.js";
 
@@ -14,15 +17,15 @@ describe("clampTooltipPosition", () => {
 		});
 	});
 
-	it("keeps the tooltip on screen at the bottom-right corner", () => {
+	it("keeps the whole tooltip on screen at the bottom-right corner", () => {
 		// 270px wide + 8px margin: the old 260 constant let it hang off the edge.
 		const { left, top } = clampTooltipPosition({
 			x: 1270,
 			y: 710,
 			...viewport,
 		});
-		expect(left).toBeLessThanOrEqual(1280 - 270);
-		expect(top).toBeLessThanOrEqual(720 - 170);
+		expect(left + TOOLTIP_WIDTH).toBeLessThanOrEqual(viewport.viewportWidth);
+		expect(top + TOOLTIP_HEIGHT).toBeLessThanOrEqual(viewport.viewportHeight);
 		expect(left).toBeGreaterThanOrEqual(0);
 		expect(top).toBeGreaterThanOrEqual(0);
 	});
@@ -46,7 +49,6 @@ describe("clampTooltipPosition", () => {
 		expect(top).toBe(8);
 	});
 });
-
 describe("resolveHoverIndex", () => {
 	it("starts on the first event instead of skipping it", () => {
 		// Regression: Math.max(-1, 0) made index 0 "current", so ArrowRight with
@@ -88,5 +90,26 @@ describe("resolveHoverIndex", () => {
 	it("returns null when there is nothing to navigate", () => {
 		expect(resolveHoverIndex("ArrowRight", -1, 0)).toBeNull();
 		expect(resolveHoverIndex("Home", -1, 0)).toBeNull();
+	});
+});
+
+describe("isEmulatedFromTouch", () => {
+	it("ignores a mouse event that follows a tap", () => {
+		// The browser fires mouseover/mousemove/click after touchend; those must
+		// not resurrect the hover the touch handler cleared.
+		expect(isEmulatedFromTouch(1000, 1200)).toBe(true);
+		expect(isEmulatedFromTouch(1000, 1499)).toBe(true);
+	});
+
+	it("accepts a real mouse event once the window has passed", () => {
+		expect(isEmulatedFromTouch(1000, 1500)).toBe(false);
+		expect(isEmulatedFromTouch(1000, 4000)).toBe(false);
+	});
+
+	it("accepts a mouse event when no touch has happened", () => {
+		// null, not 0: a touch at timestamp 0 is a real possibility and must
+		// still suppress the emulated events that follow it.
+		expect(isEmulatedFromTouch(null, 10)).toBe(false);
+		expect(isEmulatedFromTouch(0, 10)).toBe(true);
 	});
 });
