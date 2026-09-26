@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Escape now dismisses the event detail panel wherever focus is, not only when the canvas has it. The panel declares `aria-modal`, but Escape was bound to the canvas alone, so activating a related event (which re-renders the panel and drops focus to the body) left it stuck open. Covered by `tests/keyboardNav.test.jsx`.
+- PNG export no longer bakes in the hover glow. The snapshot is taken after a redraw with the highlight cleared, so the image matches the event its filename claims.
+
 - `js-yaml` was held at 4.3.1 by eslint's dependency tree, below the 4.3.2 that fixes GHSA-2883-xcg3-v3hh (high severity, unbounded CPU use parsing merge sources). Pinned through a pnpm override.
 
 - On narrow screens the insights panel and legend were absolutely positioned over the canvas, hiding most of the constellation and swallowing taps meant for the nodes. The stage now lays its parts out in normal flow, and the visualization leads the filter rail instead of sitting ~1100px below the fold. Guarded by `tests/mobileLayout.test.js`.

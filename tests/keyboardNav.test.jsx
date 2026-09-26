@@ -126,3 +126,60 @@ describe("canvas keyboard navigation", () => {
 		container.remove();
 	});
 });
+describe("dismissal", () => {
+	it("closes the detail panel on Escape even when focus is outside the canvas", async () => {
+		// The panel declares aria-modal, so Escape has to work wherever focus
+		// happens to be. It used to be bound to the canvas alone, so clicking a
+		// related event (which re-renders the panel and drops focus to body)
+		// left the panel stuck open.
+		const container = await renderApp();
+		await act(async () => {
+			window.history.replaceState(null, "", "?event=4");
+		});
+
+		const reopen = async () => {
+			const target = container.querySelector("canvas");
+			await press(target, "Enter");
+		};
+		await reopen();
+		expect(container.querySelector(".event-detail-panel")).not.toBeNull();
+
+		// Focus lands on the document body, not the canvas.
+		document.body.focus();
+		await act(async () => {
+			document.body.dispatchEvent(
+				new window.KeyboardEvent("keydown", {
+					key: "Escape",
+					bubbles: true,
+					cancelable: true,
+				}),
+			);
+		});
+
+		expect(container.querySelector(".event-detail-panel")).toBeNull();
+		container.remove();
+	});
+
+	it("closes the detail panel on Escape from a related-event button", async () => {
+		const container = await renderApp();
+		const canvas = container.querySelector("canvas");
+		await press(canvas, "Enter");
+		expect(container.querySelector(".event-detail-panel")).not.toBeNull();
+
+		// Focus a control inside the dialog, then dismiss.
+		const inner = container.querySelector(".event-detail-panel button");
+		inner.focus();
+		await act(async () => {
+			inner.dispatchEvent(
+				new window.KeyboardEvent("keydown", {
+					key: "Escape",
+					bubbles: true,
+					cancelable: true,
+				}),
+			);
+		});
+
+		expect(container.querySelector(".event-detail-panel")).toBeNull();
+		container.remove();
+	});
+});

@@ -1133,13 +1133,41 @@ function HistographyVisualization({
     setShowTooltip(false)
   }
 
+  const dismissSelection = useCallback(() => {
+    setHoveredEventId(null)
+    setShowTooltip(false)
+    onEventSelect(null)
+  }, [onEventSelect])
+
+  // App passes a fresh onEventSelect every render, so keep the latest one in a
+  // ref and let the listener below attach once per open instead of churning.
+  const dismissRef = useRef(dismissSelection)
+  useEffect(() => {
+    dismissRef.current = dismissSelection
+  }, [dismissSelection])
+
+  // The detail panel declares aria-modal, so Escape has to dismiss it wherever
+  // focus happens to be. It used to be bound to the canvas alone, which meant
+  // clicking a related event (which re-renders the panel and drops focus to the
+  // body) left the panel stuck open.
+  useEffect(() => {
+    if (!selectedEvent) return
+
+    const onKeyDown = (event) => {
+      if (event.key !== 'Escape') return
+      event.preventDefault()
+      dismissRef.current()
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [selectedEvent])
+
   const handleCanvasKeyDown = (event) => {
     if (event.key === 'Escape') {
       event.preventDefault()
-      setHoveredEventId(null)
-      setShowTooltip(false)
       // Escape's real job is dismissing the detail overlay.
-      onEventSelect(null)
+      dismissSelection()
       return
     }
 
@@ -1158,6 +1186,27 @@ function HistographyVisualization({
       onEventSelect(visibleEvents[targetIndex])
     }
   }
+
+  const handleExport = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas) {
+      setExportUnavailable(true)
+      return
+    }
+
+    // Redraw without the hover ring before snapshotting. Otherwise the image
+    // shows a glow on whichever node the pointer was over while the filename
+    // claims it is the selected event. Two frames: one for React to commit the
+    // cleared hover, one for the layout effect to repaint. Clearing it is also
+    // just correct here — the pointer is on the button, not on a node.
+    setHoveredEventId(null)
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setExportUnavailable(!downloadCanvasAsPng(canvas, exportFileName(selectedEvent?.id)))
+      })
+    })
+  }, [selectedEvent])
 
   const handleStartYearChange = (event) => {
     const nextStart = Number(event.target.value)
@@ -1324,10 +1373,7 @@ function HistographyVisualization({
           <button
             type="button"
             className="export-png-button"
-            onClick={() => {
-              const ok = downloadCanvasAsPng(canvasRef.current, exportFileName(selectedEvent?.id))
-              setExportUnavailable(!ok)
-            }}
+            onClick={handleExport}
           >
             Export PNG
           </button>
