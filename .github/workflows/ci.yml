@@ -29,7 +29,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: npx eslint src/
+        run: pnpm lint
 
       - name: Test
         run: pnpm test

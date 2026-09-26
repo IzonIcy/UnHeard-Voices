@@ -138,7 +138,7 @@ function App() {
     <div className="app">
       <header className="app-header">
         <h1>Unheard Voices</h1>
-        <p>Exploring unrepresented histories from 1700-2026</p>
+        <p>Exploring unrepresented histories from {minYear}-{maxYear}</p>
         <div className="view-mode-toggle">
           <button 
             type="button"

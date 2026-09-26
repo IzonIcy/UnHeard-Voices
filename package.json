@@ -2,7 +2,7 @@
   "name": "unheard-voices-timeline",
   "private": true,
   "version": "0.2.0",
-  "description": "Interactive timeline spotlighting overlooked voices and movements from 1700-2026",
+  "description": "Interactive timeline spotlighting overlooked voices and movements from 1712-2025",
   "type": "module",
   "engines": {
     "node": ">=22"
