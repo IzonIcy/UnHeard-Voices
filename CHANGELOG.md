@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Open Graph link preview image, generated from the dataset so the category legend reflects real counts (`scripts/generate_og_image.py`).
+- `CHANGELOG.md`, `CONTRIBUTING.md`, and `SECURITY.md`.
+
 ### Fixed
 
 - Canvas backing store is sized from the laid-out CSS box multiplied by `devicePixelRatio` instead of a hardcoded 1200x600, and all hit-testing geometry stays in CSS pixels. The visualization is no longer a blurry upscale on retina displays and nodes keep the same physical size across devices. Covered by `tests/canvasDpr.test.jsx`.

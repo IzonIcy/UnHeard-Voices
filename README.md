@@ -67,4 +67,8 @@ Pushes to `main` build on Vercel using `vercel.json` (`pnpm install --frozen-loc
 rm -rf node_modules && pnpm install
 ```
 
+## Writing about it
+
+[Building a canvas timeline that doesn't lie about where things are](blog/building-a-canvas-timeline.md) — on `devicePixelRatio`, hit targets, and why the layout stopped moving when you filter.
+
 Contributing? See [CONTRIBUTING.md](CONTRIBUTING.md).

@@ -186,7 +186,7 @@ def main():
     print(f"wrote {OUTPUT} ({WIDTH}x{HEIGHT})")
 
 
-def _radial(size, cx, cy, radius, rgb, strength):
+def _radial(size, cx, cy, radius, color, strength):
     from PIL import ImageDraw
 
     glow = Image.new("RGB", size, (0, 0, 0))
@@ -197,7 +197,7 @@ def _radial(size, cx, cy, radius, rgb, strength):
         r = radius * t
         fade = (1 - t) ** 2 * strength
         draw.ellipse(
-            [cx - r, cy - r, cx + r, cy + r], fill=tuple(int(c * fade) for c in rgb)
+            [cx - r, cy - r, cx + r, cy + r], fill=tuple(int(c * fade) for c in color)
         )
     return glow
 
