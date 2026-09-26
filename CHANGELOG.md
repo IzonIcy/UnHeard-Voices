@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   semicolons, which is where the drift above came from. It now matches the
   documented style. CSS and Markdown are excluded because Prettier owns those, and
   the two disagreed on line width.
+- `src/styles/index.css` was indented with tabs while `timeline.css` used spaces, so
+  Prettier considered it unformatted and would have rewritten it on any write. The
+  built stylesheet is byte-identical before and after.
 
 ### Fixed
 
