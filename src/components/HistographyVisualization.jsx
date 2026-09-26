@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { downloadCanvasAsPng, exportFileName } from '../lib/exportImage.js'
+import { computeBackingStore, toCanvasSpace, HIT_RADIUS_PX } from '../lib/canvasGeometry.js'
 import '../styles/timeline.css'
 
 export const CATEGORY_COLORS = {
@@ -542,6 +543,8 @@ function HistographyVisualization({
   const [showTooltip, setShowTooltip] = useState(false)
   const [exportUnavailable, setExportUnavailable] = useState(false)
   const [viewport, setViewport] = useState({ width: 1280, height: 720 })
+  // Bumped when the canvas box changes so the draw effect re-reads it.
+  const [canvasRevision, setCanvasRevision] = useState(0)
 
   const canvasRef = useRef(null)
   const pointMapRef = useRef({})
@@ -848,7 +851,7 @@ function HistographyVisualization({
       const progress = (event.date - startYear) / denominator
       const x = paddingX + progress * chartWidth
       const y = paddingY + slot.graphY * chartHeight
-      points[event.id] = { x, y, hitRadius: 14 }
+      points[event.id] = { x, y, hitRadius: HIT_RADIUS_PX }
 
       const isHovered = hoveredEventId === event.id
       const isSelected = selectedEvent?.id === event.id
@@ -898,7 +901,7 @@ function HistographyVisualization({
       const radius = slot.ringRadius * maxRadius
       const x = centerX + Math.cos(slot.ringAngle) * radius
       const y = centerY + Math.sin(slot.ringAngle) * radius
-      points[event.id] = { x, y, hitRadius: 14 }
+      points[event.id] = { x, y, hitRadius: HIT_RADIUS_PX }
 
       const isHovered = hoveredEventId === event.id
       const isSelected = selectedEvent?.id === event.id
@@ -927,30 +930,63 @@ function HistographyVisualization({
     })
   }, [hoveredEventId, selectedEvent, stableLayout, visibleEvents])
 
-  // Redraw the canvas whenever the view inputs (or the memoized draw
-  // callbacks built from them) change.
+  // The backing store is derived from the laid-out box, so it has to be
+  // recomputed whenever that box changes. ResizeObserver catches container
+  // reflows (the category rail collapsing, a sidebar opening) that a window
+  // resize listener would miss.
   useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas || typeof ResizeObserver === 'undefined') return
+
+    const observer = new ResizeObserver(() => {
+      setCanvasRevision((revision) => revision + 1)
+    })
+    observer.observe(canvas)
+
+    return () => observer.disconnect()
+  }, [])
+
+  // Redraw the canvas whenever the view inputs (or the memoized draw
+  // callbacks built from them) change. Runs as a layout effect so a filter
+  // change never paints a frame of the previous graph.
+  useLayoutEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const width = canvas.width
-    const height = canvas.height
+    // The backing store tracks the laid-out CSS box times the device pixel
+    // ratio, so hairlines stay crisp on retina instead of being resampled.
+    const { width, height, dpr } = computeBackingStore({
+      cssWidth: canvas.clientWidth,
+      cssHeight: canvas.clientHeight,
+      dpr: window.devicePixelRatio
+    })
+
+    if (canvas.width !== width) canvas.width = width
+    if (canvas.height !== height) canvas.height = height
+
+    // Every draw callback below works in CSS pixels; the transform is what
+    // maps them onto the denser backing store.
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+    // Logical size the draw callbacks lay out against, in CSS pixels.
+    const cssWidth = width / dpr
+    const cssHeight = height / dpr
     const points = {}
 
-    ctx.clearRect(0, 0, width, height)
-    drawBackdrop(ctx, width, height)
+    ctx.clearRect(0, 0, cssWidth, cssHeight)
+    drawBackdrop(ctx, cssWidth, cssHeight)
 
     if (viewMode === 'timeline') {
-      drawTimelineView(ctx, width, height, points)
+      drawTimelineView(ctx, cssWidth, cssHeight, points)
     } else {
-      drawConstellationView(ctx, width, height, points)
+      drawConstellationView(ctx, cssWidth, cssHeight, points)
     }
 
     pointMapRef.current = points
-  }, [drawConstellationView, drawTimelineView, drawBackdrop, viewMode])
+  }, [canvasRevision, drawConstellationView, drawTimelineView, drawBackdrop, viewMode])
 
   const findEventAtPoint = (x, y) => {
     let closest = null
@@ -973,16 +1009,8 @@ function HistographyVisualization({
     return closest
   }
 
-  const getCanvasPoint = (canvas, clientX, clientY) => {
-    const rect = canvas.getBoundingClientRect()
-    const scaleX = canvas.width / rect.width
-    const scaleY = canvas.height / rect.height
-
-    return {
-      x: (clientX - rect.left) * scaleX,
-      y: (clientY - rect.top) * scaleY
-    }
-  }
+  const getCanvasPoint = (canvas, clientX, clientY) =>
+    toCanvasSpace(canvas.getBoundingClientRect(), clientX, clientY)
 
   const updateHoverFromPointer = (clientX, clientY) => {
     const canvas = canvasRef.current
@@ -990,8 +1018,10 @@ function HistographyVisualization({
       return null
     }
 
-    const { x, y } = getCanvasPoint(canvas, clientX, clientY)
-    const found = findEventAtPoint(x, y)
+    const point = getCanvasPoint(canvas, clientX, clientY)
+    if (!point) return null
+
+    const found = findEventAtPoint(point.x, point.y)
     setHoveredEventId(found?.id ?? null)
     setTooltipPos({ x: clientX, y: clientY })
     return found
@@ -1292,8 +1322,6 @@ function HistographyVisualization({
 
           <canvas
             ref={canvasRef}
-            width={1200}
-            height={600}
             className="event-canvas"
             tabIndex={0}
             role="img"
