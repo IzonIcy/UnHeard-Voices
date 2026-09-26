@@ -12,6 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open Graph link preview image, generated from the dataset so the category legend reflects real counts (`scripts/generate_og_image.py`).
 - `CHANGELOG.md`, `CONTRIBUTING.md`, and `SECURITY.md`.
 
+### Changed
+
+- The code style in `AGENTS.md` is now enforced instead of just documented. ESLint
+  checks indent, quotes and semicolons, `pnpm lint` covers `tests` and the root
+  config files as well as `src`, husky runs it pre-commit, and `.editorconfig`
+  states the convention for editors. Every JS file in the repo was brought into
+  line; the reformat changes no behaviour.
+- `vitest.config.js` was written in a different style to the rest of the repo.
+
 ### Fixed
 
 - Escape now dismisses the event detail panel wherever focus is, not only when the canvas has it. The panel declares `aria-modal`, but Escape was bound to the canvas alone, so activating a related event (which re-renders the panel and drops focus to the body) left it stuck open. Covered by `tests/keyboardNav.test.jsx`.

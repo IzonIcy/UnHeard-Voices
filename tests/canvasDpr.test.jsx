@@ -1,123 +1,123 @@
-import { describe, it, expect, beforeAll, afterEach, vi } from "vitest";
-import { createRoot } from "react-dom/client";
-import { act } from "react";
-import App from "../src/App";
+import { describe, it, expect, beforeAll, afterEach, vi } from 'vitest'
+import { createRoot } from 'react-dom/client'
+import { act } from 'react'
+import App from '../src/App'
 
-const CSS_WIDTH = 800;
-const CSS_HEIGHT = 400;
+const CSS_WIDTH = 800
+const CSS_HEIGHT = 400
 
 beforeAll(() => {
-	if (!window.matchMedia) {
-		window.matchMedia = () => ({
-			matches: false,
-			addEventListener: () => {},
-			removeEventListener: () => {},
-			addListener: () => {},
-			removeListener: () => {},
-		});
-	}
+  if (!window.matchMedia) {
+    window.matchMedia = () => ({
+      matches: false,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+    })
+  }
 
-	const noop2d = new Proxy(
-		{},
-		{
-			get: (_target, prop) => {
-				if (prop === "measureText") return () => ({ width: 0 });
-				if (
-					prop === "createLinearGradient" ||
-					prop === "createRadialGradient"
-				) {
-					return () => ({ addColorStop: () => {} });
-				}
-				return () => {};
-			},
-			set: () => true,
-		},
-	);
-	vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(noop2d);
+  const noop2d = new Proxy(
+    {},
+    {
+      get: (_target, prop) => {
+        if (prop === 'measureText') return () => ({ width: 0 })
+        if (
+          prop === 'createLinearGradient' ||
+					prop === 'createRadialGradient'
+        ) {
+          return () => ({ addColorStop: () => {} })
+        }
+        return () => {}
+      },
+      set: () => true,
+    },
+  )
+  vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(noop2d)
 
-	// jsdom performs no layout, so the canvas reports a zero-sized box. Give it
-	// a realistic one and record the DPR the component reads.
-	vi.spyOn(HTMLCanvasElement.prototype, "clientWidth", "get").mockReturnValue(
-		CSS_WIDTH,
-	);
-	vi.spyOn(HTMLCanvasElement.prototype, "clientHeight", "get").mockReturnValue(
-		CSS_HEIGHT,
-	);
-});
+  // jsdom performs no layout, so the canvas reports a zero-sized box. Give it
+  // a realistic one and record the DPR the component reads.
+  vi.spyOn(HTMLCanvasElement.prototype, 'clientWidth', 'get').mockReturnValue(
+    CSS_WIDTH,
+  )
+  vi.spyOn(HTMLCanvasElement.prototype, 'clientHeight', 'get').mockReturnValue(
+    CSS_HEIGHT,
+  )
+})
 
 afterEach(() => {
-	vi.unstubAllGlobals();
-});
+  vi.unstubAllGlobals()
+})
 
 const renderApp = async () => {
-	const container = document.createElement("div");
-	document.body.appendChild(container);
-	await act(async () => {
-		createRoot(container).render(<App />);
-	});
-	return { container, canvas: container.querySelector("canvas") };
-};
+  const container = document.createElement('div')
+  document.body.appendChild(container)
+  await act(async () => {
+    createRoot(container).render(<App />)
+  })
+  return { container, canvas: container.querySelector('canvas') }
+}
 
-describe("canvas backing store", () => {
-	it("matches the CSS box on a 1x display", async () => {
-		vi.stubGlobal("devicePixelRatio", 1);
-		const { container, canvas } = await renderApp();
+describe('canvas backing store', () => {
+  it('matches the CSS box on a 1x display', async () => {
+    vi.stubGlobal('devicePixelRatio', 1)
+    const { container, canvas } = await renderApp()
 
-		expect(canvas.width).toBe(CSS_WIDTH);
-		expect(canvas.height).toBe(CSS_HEIGHT);
-		container.remove();
-	});
+    expect(canvas.width).toBe(CSS_WIDTH)
+    expect(canvas.height).toBe(CSS_HEIGHT)
+    container.remove()
+  })
 
-	it("doubles on a 2x display instead of upscaling a fixed 1200px buffer", async () => {
-		vi.stubGlobal("devicePixelRatio", 2);
-		const { container, canvas } = await renderApp();
+  it('doubles on a 2x display instead of upscaling a fixed 1200px buffer', async () => {
+    vi.stubGlobal('devicePixelRatio', 2)
+    const { container, canvas } = await renderApp()
 
-		// The old markup hardcoded width={1200} height={600} and never read DPR,
-		// so a retina display got a blurry upscale. This is the regression guard.
-		expect(canvas.width).toBe(CSS_WIDTH * 2);
-		expect(canvas.height).toBe(CSS_HEIGHT * 2);
-		container.remove();
-	});
+    // The old markup hardcoded width={1200} height={600} and never read DPR,
+    // so a retina display got a blurry upscale. This is the regression guard.
+    expect(canvas.width).toBe(CSS_WIDTH * 2)
+    expect(canvas.height).toBe(CSS_HEIGHT * 2)
+    container.remove()
+  })
 
-	it("follows a fractional device pixel ratio", async () => {
-		vi.stubGlobal("devicePixelRatio", 1.5);
-		const { container, canvas } = await renderApp();
+  it('follows a fractional device pixel ratio', async () => {
+    vi.stubGlobal('devicePixelRatio', 1.5)
+    const { container, canvas } = await renderApp()
 
-		expect(canvas.width).toBe(CSS_WIDTH * 1.5);
-		expect(canvas.height).toBe(CSS_HEIGHT * 1.5);
-		container.remove();
-	});
-  it("resizes the backing store when the device pixel ratio changes", async () => {
+    expect(canvas.width).toBe(CSS_WIDTH * 1.5)
+    expect(canvas.height).toBe(CSS_HEIGHT * 1.5)
+    container.remove()
+  })
+  it('resizes the backing store when the device pixel ratio changes', async () => {
     // Zoom, or dragging the window to another display, changes devicePixelRatio
     // without the element box changing. matchMedia fires; the ResizeObserver
     // does not, so without this the 1x buffer stays stretched on a 2x screen.
-    let fireDprChange = () => {};
-    const listeners = new Set();
-    vi.stubGlobal("devicePixelRatio", 1);
-    vi.stubGlobal("matchMedia", (query) => ({
+    let fireDprChange = () => {}
+    const listeners = new Set()
+    vi.stubGlobal('devicePixelRatio', 1)
+    vi.stubGlobal('matchMedia', (query) => ({
       matches: false,
       media: query,
       addEventListener: (_type, handler) => {
-        listeners.add(handler);
-        fireDprChange = handler;
+        listeners.add(handler)
+        fireDprChange = handler
       },
       removeEventListener: (_type, handler) => listeners.delete(handler),
       addListener: () => {},
       removeListener: () => {},
-    }));
+    }))
 
-    const { container, canvas } = await renderApp();
-    expect(canvas.width).toBe(CSS_WIDTH);
+    const { container, canvas } = await renderApp()
+    expect(canvas.width).toBe(CSS_WIDTH)
 
     // The component reads devicePixelRatio at draw time, so move it before the
     // change event asks for a repaint.
-    vi.stubGlobal("devicePixelRatio", 2);
+    vi.stubGlobal('devicePixelRatio', 2)
     await act(async () => {
-      fireDprChange();
-    });
+      fireDprChange()
+    })
 
-    expect(canvas.width).toBe(CSS_WIDTH * 2);
-    expect(canvas.height).toBe(CSS_HEIGHT * 2);
-    container.remove();
-  });
-});
+    expect(canvas.width).toBe(CSS_WIDTH * 2)
+    expect(canvas.height).toBe(CSS_HEIGHT * 2)
+    container.remove()
+  })
+})

@@ -4,8 +4,8 @@
 
 /** Deterministic pseudo-random value in [0, 1) for an id/salt pair. */
 export function stableValue(id, salt) {
-	const raw = Math.sin((id + 1) * (salt + 17) * 12.9898) * 43758.5453;
-	return raw - Math.floor(raw);
+  const raw = Math.sin((id + 1) * (salt + 17) * 12.9898) * 43758.5453
+  return raw - Math.floor(raw)
 }
 
 /**
@@ -17,16 +17,16 @@ export function stableValue(id, salt) {
  * angle is identical whether or not a filter is applied.
  */
 export function computeStarLayout(orderedIds) {
-	const total = Math.max(orderedIds.length, 1);
-	const layout = {};
+  const total = Math.max(orderedIds.length, 1)
+  const layout = {}
 
-	orderedIds.forEach((id, index) => {
-		layout[id] = {
-			graphY: 0.12 + stableValue(id, 1) * 0.76,
-			ringRadius: 0.26 + stableValue(id, 2) * 0.72,
-			ringAngle: (index / total) * Math.PI * 2,
-		};
-	});
+  orderedIds.forEach((id, index) => {
+    layout[id] = {
+      graphY: 0.12 + stableValue(id, 1) * 0.76,
+      ringRadius: 0.26 + stableValue(id, 2) * 0.72,
+      ringAngle: (index / total) * Math.PI * 2,
+    }
+  })
 
-	return layout;
+  return layout
 }

@@ -661,8 +661,8 @@ function HistographyVisualization({
     const searchActive = normalizedSearchQuery.length > 0
     const categoryFiltered = activeCategories.length !== allCategories.length
     let message = `${count} event${count === 1 ? '' : 's'} in view`
-    if (searchActive) message += `, filtered by search`
-    if (categoryFiltered) message += `, filtered by category`
+    if (searchActive) message += ', filtered by search'
+    if (categoryFiltered) message += ', filtered by category'
     return message
   }, [visibleEvents.length, normalizedSearchQuery, activeCategories.length, allCategories.length])
 
