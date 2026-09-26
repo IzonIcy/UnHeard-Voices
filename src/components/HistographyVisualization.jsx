@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { downloadCanvasAsPng, exportFileName } from '../lib/exportImage.js'
 import { computeBackingStore, toCanvasSpace, HIT_RADIUS_PX } from '../lib/canvasGeometry.js'
+import { clampTooltipPosition, resolveHoverIndex } from '../lib/interaction.js'
 import '../styles/timeline.css'
 
 export const CATEGORY_COLORS = {
@@ -551,6 +552,9 @@ function HistographyVisualization({
   const touchStartEventIdRef = useRef(null)
   const touchStartPosRef = useRef(null)
   const rafIdRef = useRef(null)
+  // Newest pointer position, so a throttled frame reads the latest coords
+  // rather than whichever event happened to arrive first.
+  const pointerRef = useRef({ x: 0, y: 0 })
 
   const allCategories = useMemo(() => Array.from(new Set(events.map((event) => event.category))), [events])
   const eventsById = useMemo(() => new Map(events.map((event) => [event.id, event])), [events])
@@ -1028,13 +1032,27 @@ function HistographyVisualization({
   }
 
   const handleCanvasMouseMove = (event) => {
+    pointerRef.current = { x: event.clientX, y: event.clientY }
+    // Throttle to one frame, but keep only the newest coordinates: dropping
+    // events entirely left the highlight up to a frame behind the cursor.
     if (rafIdRef.current) return
     rafIdRef.current = requestAnimationFrame(() => {
       rafIdRef.current = null
       setShowTooltip(true)
-      updateHoverFromPointer(event.clientX, event.clientY)
+      updateHoverFromPointer(pointerRef.current.x, pointerRef.current.y)
     })
   }
+
+  const cancelPendingHoverFrame = () => {
+    if (rafIdRef.current !== null) {
+      cancelAnimationFrame(rafIdRef.current)
+      rafIdRef.current = null
+    }
+  }
+
+  // A frame queued just before unmount would otherwise set state on a dead
+  // tree.
+  useEffect(() => cancelPendingHoverFrame, [])
 
   const handleCanvasClick = (event) => {
     const found = updateHoverFromPointer(event.clientX, event.clientY)
@@ -1069,6 +1087,12 @@ function HistographyVisualization({
   }
 
   const handleCanvasTouchEnd = () => {
+    // No mouseleave follows a tap on a touch device, so the highlight has to
+    // be cleared here or the tapped node keeps its glow ring.
+    setHoveredEventId(null)
+    setShowTooltip(false)
+    cancelPendingHoverFrame()
+
     if (touchStartEventIdRef.current === null) {
       return
     }
@@ -1080,57 +1104,38 @@ function HistographyVisualization({
     }
   }
 
+  const handleCanvasTouchCancel = () => {
+    // iOS Safari fires touchcancel when it reclaims the gesture for
+    // scrolling, which would otherwise leave a stale tap target behind.
+    touchStartEventIdRef.current = null
+    touchStartPosRef.current = null
+    setHoveredEventId(null)
+    setShowTooltip(false)
+  }
+
   const handleCanvasKeyDown = (event) => {
-    if (!visibleEvents.length) {
-      return
-    }
-
-    const currentIndex = Math.max(visibleEvents.findIndex((item) => item.id === hoveredEventId), 0)
-    const maxIndex = visibleEvents.length - 1
-
-    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-      event.preventDefault()
-      setShowTooltip(false)
-      setHoveredEventId(visibleEvents[Math.min(currentIndex + 1, maxIndex)].id)
-      return
-    }
-
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-      event.preventDefault()
-      setShowTooltip(false)
-      setHoveredEventId(visibleEvents[Math.max(currentIndex - 1, 0)].id)
-      return
-    }
-
-    if (event.key === 'Home') {
-      event.preventDefault()
-      setShowTooltip(false)
-      setHoveredEventId(visibleEvents[0].id)
-      return
-    }
-
-    if (event.key === 'End') {
-      event.preventDefault()
-      setShowTooltip(false)
-      setHoveredEventId(visibleEvents[maxIndex].id)
-      return
-    }
-
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      const selected = visibleEvents[currentIndex]
-      if (selected) {
-        onEventSelect(selected)
-      }
-      return
-    }
-
     if (event.key === 'Escape') {
       event.preventDefault()
       setHoveredEventId(null)
       setShowTooltip(false)
       // Escape's real job is dismissing the detail overlay.
       onEventSelect(null)
+      return
+    }
+
+    const currentIndex = visibleEvents.findIndex((item) => item.id === hoveredEventId)
+    const targetIndex = resolveHoverIndex(event.key, currentIndex, visibleEvents.length)
+
+    if (targetIndex === null) {
+      return
+    }
+
+    event.preventDefault()
+    setShowTooltip(false)
+    setHoveredEventId(visibleEvents[targetIndex].id)
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      onEventSelect(visibleEvents[targetIndex])
     }
   }
 
@@ -1144,6 +1149,11 @@ function HistographyVisualization({
     onYearChange([startYear, Math.max(nextEnd, startYear)])
   }
 
+  const tooltipOffset = useMemo(
+    () => clampTooltipPosition({ x: tooltipPos.x, y: tooltipPos.y, viewportWidth: viewport.width, viewportHeight: viewport.height }),
+    [tooltipPos, viewport]
+  )
+
   const wikiUrl = selectedEvent
     ? `https://en.wikipedia.org/wiki/${encodeURIComponent(selectedEvent.wikiLink.replaceAll(' ', '_'))}`
     : null
@@ -1151,7 +1161,13 @@ function HistographyVisualization({
   // Update viewport state on resize
   useEffect(() => {
     const updateViewport = () => {
-      setViewport({ width: window.innerWidth, height: window.innerHeight })
+      const width = window.innerWidth
+      const height = window.innerHeight
+      // Returning the same object lets React bail out instead of re-rendering
+      // every insight card and list row on each resize tick.
+      setViewport((previous) =>
+        previous.width === width && previous.height === height ? previous : { width, height }
+      )
     }
     updateViewport()
     window.addEventListener('resize', updateViewport)
@@ -1328,6 +1344,9 @@ function HistographyVisualization({
             aria-label="Interactive visualization of curated historical events. Use arrow keys to move through points and Enter to open a selected event."
             onMouseMove={handleCanvasMouseMove}
             onMouseLeave={() => {
+              // Cancel first: a queued frame would otherwise re-arm the
+              // highlight after the pointer is already gone.
+              cancelPendingHoverFrame()
               setHoveredEventId(null)
               setShowTooltip(false)
             }}
@@ -1335,6 +1354,7 @@ function HistographyVisualization({
             onTouchStart={handleCanvasTouchStart}
             onTouchMove={handleCanvasTouchMove}
             onTouchEnd={handleCanvasTouchEnd}
+            onTouchCancel={handleCanvasTouchCancel}
             onKeyDown={handleCanvasKeyDown}
           />
 
@@ -1361,8 +1381,8 @@ function HistographyVisualization({
           className="hover-tooltip"
           style={{
             display: 'block',
-            left: `${Math.min(tooltipPos.x + 14, viewport.width - 260)}px`,
-            top: `${Math.min(tooltipPos.y + 14, viewport.height - 150)}px`
+            left: `${tooltipOffset.left}px`,
+            top: `${tooltipOffset.top}px`
           }}
         >
           <strong>{hoveredEvent.title}</strong>
