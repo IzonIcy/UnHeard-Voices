@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { downloadCanvasAsPng, exportFileName } from '../lib/exportImage.js'
 import { computeBackingStore, toCanvasSpace, HIT_RADIUS_PX } from '../lib/canvasGeometry.js'
 import { clampTooltipPosition, resolveHoverIndex } from '../lib/interaction.js'
+import { computeStarLayout } from '../lib/starLayout.js'
 import '../styles/timeline.css'
 
 export const CATEGORY_COLORS = {
@@ -507,11 +508,6 @@ const formatTagLabel = (tag, labels) =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
 
-const stableValue = (id, salt) => {
-  const raw = Math.sin((id + 1) * (salt + 17) * 12.9898) * 43758.5453
-  return raw - Math.floor(raw)
-}
-
 const decadeLabel = (year) => `${Math.floor(year / 10) * 10}s`
 
 const sharesTag = (sourceTags, targetTags) => {
@@ -635,17 +631,13 @@ function HistographyVisualization({
     return searchEligibleEvents.filter((event) => activeSet.has(event.category))
   }, [activeCategories, searchEligibleEvents])
 
-  const stableLayout = useMemo(() => {
-    const layout = {}
-    visibleEvents.forEach((event, index) => {
-      layout[event.id] = {
-        graphY: 0.12 + stableValue(event.id, 1) * 0.76,
-        ringRadius: 0.26 + stableValue(event.id, 2) * 0.72,
-        ringAngle: (index / Math.max(visibleEvents.length, 1)) * Math.PI * 2 + stableValue(event.id, 3) * 0.45
-      }
-    })
-    return layout
-  }, [visibleEvents])
+  // Built from every event, not the visible subset: a slot has to mean the
+  // same thing whether or not a category filter is applied, or the whole
+  // constellation reshuffles each time you toggle something.
+  const stableLayout = useMemo(
+    () => computeStarLayout(events.map((event) => event.id).sort((a, b) => a - b)),
+    [events]
+  )
 
   const hoveredEvent = useMemo(
     () => visibleEvents.find((event) => event.id === hoveredEventId) ?? null,
